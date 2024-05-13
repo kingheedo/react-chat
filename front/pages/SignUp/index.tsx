@@ -1,31 +1,59 @@
 import Form from '@components/Form';
-import React, { useMemo } from 'react';
+import React from 'react';
 import { Section } from './styles';
 import useInput from '@hooks/useInput';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import useSignUp from '@hooks/useMutate/useSignUp';
 
 const SignUp = () => {
-  const { value: email, onChangeInput: onChangeEmail } = useInput<string>({
+  const {
+    value: email,
+    setValue: setEmail,
+    onChangeInput: onChangeEmail,
+  } = useInput<string>({
     initValue: '',
   });
-  const { value: nickName, onChangeInput: onChangeNickName } = useInput<string>(
-    {
-      initValue: '',
-    },
-  );
-  const { value: password, onChangeInput: onChangePassword } = useInput<string>(
-    {
-      initValue: '',
-    },
-  );
-  const { value: passwordCheck, onChangeInput: onChangePasswordCheck } =
-    useInput<string>({
-      initValue: '',
-    });
+  const {
+    value: nickName,
+    setValue: setNickName,
+    onChangeInput: onChangeNickName,
+  } = useInput<string>({
+    initValue: '',
+  });
+  const {
+    value: password,
+    setValue: setPassword,
+    onChangeInput: onChangePassword,
+  } = useInput<string>({
+    initValue: '',
+  });
+  const {
+    value: passwordCheck,
+    setValue: setPasswordCheck,
+    onChangeInput: onChangePasswordCheck,
+  } = useInput<string>({
+    initValue: '',
+  });
+  const { postSignUp } = useSignUp({
+    email,
+    nickname: nickName,
+    password,
+  });
+  const navigate = useNavigate();
 
-  const onSubmit = () => {
-    // 1. 회원가입 api요청
-    // 2.로그인 페이지로 리다이렉트
+  /** 폼 제출시
+   *
+   * 1. state 초기화
+   * 2. 로그인 페이지로 이동
+   */
+  const onSubmit = async () => {
+    await postSignUp().then(() => {
+      setEmail('');
+      setNickName('');
+      setPassword('');
+      setPasswordCheck('');
+      navigate('/login');
+    });
   };
 
   return (
@@ -41,6 +69,7 @@ const SignUp = () => {
             !!passwordCheck &&
             password === passwordCheck
           }
+          onSubmit={onSubmit}
         >
           <Form.Label htmlFor="email" text={'Email address'} />
           <Form.Input
@@ -106,6 +135,10 @@ const SignUp = () => {
 
           <Form.SubmitBtn>SignUp</Form.SubmitBtn>
         </Form>
+        <p>
+          이미 계정이 있으신가요?
+          <Link to="/login">로그인하러 가기</Link>
+        </p>
       </main>
     </Section>
   );

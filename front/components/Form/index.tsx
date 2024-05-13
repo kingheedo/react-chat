@@ -1,22 +1,24 @@
 import React, {
-  ChangeEvent,
   PropsWithChildren,
   createContext,
   useContext,
-  useEffect,
   useMemo,
+  useRef,
   useState,
 } from 'react';
 import {
   FormEl,
+  FormError,
   FormInput,
   FormInputWrap,
   FormLabel,
   FormSubmitBtn,
 } from './styles';
+import { isAxiosError } from 'axios';
 
 interface IFormProps {
   enabled: boolean;
+  onSubmit: () => Promise<void>;
 }
 
 interface ILabelProps {
@@ -31,33 +33,63 @@ interface IInputProps extends React.ComponentProps<'input'> {
 
 interface IFormContext {
   isSubmit: boolean;
+  formErrorMsg: string;
 }
 
 const FormContext = createContext<IFormContext>({
   isSubmit: false,
+  formErrorMsg: '',
 });
 
-const Form = ({ enabled, children }: IFormProps & PropsWithChildren) => {
+const Form = ({
+  enabled,
+  onSubmit,
+  children,
+}: IFormProps & PropsWithChildren) => {
   const [isSubmit, setIsSubmit] = useState(false);
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const [formErrorMsg, setFormErrorMsg] = useState('');
+
+  /** 폼 제출 시
+   *
+   * 1. props 함수 실행
+   * 2. 에러메시지있으면 초기화
+   * 3. 제출상태 초기화
+   */
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmit(true);
     if (!enabled) {
       return null;
     }
-    console.log('폼 제출');
+    try {
+      await onSubmit();
+      if (formErrorMsg) {
+        setFormErrorMsg('');
+      }
+      setIsSubmit(false);
+    } catch (err) {
+      if (isAxiosError(err) && err.response) {
+        console.log('err.response.data', err.response.data);
+
+        setFormErrorMsg(err.response.data);
+      }
+    }
   };
 
   const formValue = useMemo(
     () => ({
       isSubmit,
+      formErrorMsg,
     }),
     [isSubmit],
   );
 
   return (
     <FormContext.Provider value={formValue}>
-      <FormEl onSubmit={handleSubmit}>{children}</FormEl>
+      <FormEl onSubmit={handleSubmit}>
+        {children}
+        {formErrorMsg && <Form.Error>{formErrorMsg}</Form.Error>}
+      </FormEl>
     </FormContext.Provider>
   );
 };
@@ -69,20 +101,12 @@ const Label = (props: ILabelProps) => {
 
 const Input = (props: IInputProps) => {
   const { isError, errorMsg } = props;
-  const form = useForm();
-
-  console.log('form.isSubmit', form.isSubmit);
-  console.log('isError', isError);
-  console.log('둘다', form.isSubmit && isError);
+  const { isSubmit } = useForm();
 
   return (
     <FormInputWrap className="input-wrap">
-      <FormInput
-        error={form.isSubmit && isError}
-        autoComplete="off"
-        {...props}
-      />
-      {form.isSubmit && isError && (
+      <FormInput error={isSubmit && isError} autoComplete="off" {...props} />
+      {isSubmit && isError && (
         <strong className="error">
           <svg
             data-w3c="true"
@@ -108,9 +132,14 @@ const SubmitBtn = ({ children }: PropsWithChildren) => {
   return <FormSubmitBtn type="submit">{children}</FormSubmitBtn>;
 };
 
+const Error = ({ children }: PropsWithChildren) => {
+  return <FormError>{children}</FormError>;
+};
+
 Form.Label = Label;
 Form.Input = Input;
 Form.SubmitBtn = SubmitBtn;
+Form.Error = Error;
 
 const useForm = () => useContext(FormContext);
 

@@ -1,5 +1,5 @@
-import { Global, css } from '@emotion/react';
-import App from '@layouts/App';
+import { Global } from '@emotion/react';
+import App from './App';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';

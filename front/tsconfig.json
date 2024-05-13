@@ -16,7 +16,10 @@
       "@layouts/*": ["layouts/*"],
       "@pages/*": ["pages/*"],
       "@utils/*": ["utils/*"],
-      "@types/*": ["types/*"]
+      "@types/*": ["types/*"],
+      "@apis/*": ["apis/*"],
+      "@context/*": ["context/*"],
+      "@store/*": ["store/*"]
     }
   },
   "ts-node": {

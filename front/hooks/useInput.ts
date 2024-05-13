@@ -6,6 +6,7 @@ interface IUseInputProps<T> {
 
 type ReturnTypes<T> = {
   value: T;
+  setValue: React.Dispatch<React.SetStateAction<T>>;
   onChangeInput: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
@@ -21,6 +22,7 @@ const useInput = <T>({ initValue }: IUseInputProps<T>): ReturnTypes<T> => {
 
   return {
     value,
+    setValue,
     onChangeInput,
   };
 };

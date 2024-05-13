@@ -63,3 +63,8 @@ export const FormSubmitBtn = styled.button`
   font-weight: 700;
   color: #fff;
 `;
+
+export const FormError = styled.span`
+  color: #c01343;
+  font-weight: 400;
+`;

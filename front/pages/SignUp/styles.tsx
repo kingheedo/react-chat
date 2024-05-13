@@ -19,4 +19,19 @@ export const Section = styled.section`
       color: #1d1c1d;
     }
   }
+  > main {
+    width: 400px;
+    margin: 0 auto;
+    > p {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 24px;
+      color: rgb(97, 96, 97);
+      > a {
+        margin-top: 1px;
+        color: #1264a3;
+      }
+    }
+  }
 `;
