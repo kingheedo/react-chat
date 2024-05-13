@@ -23,13 +23,25 @@ const SignUp = () => {
       initValue: '',
     });
 
+  const onSubmit = () => {
+    // 1. 회원가입 api요청
+    // 2.로그인 페이지로 리다이렉트
+  };
+
   return (
     <Section className="signup">
       <header>
         <Link to="/">React-Chat</Link>
       </header>
       <main>
-        <Form enabled={!!(email && nickName && password && passwordCheck)}>
+        <Form
+          enabled={
+            !!(email && nickName && password && passwordCheck) &&
+            !!password &&
+            !!passwordCheck &&
+            password === passwordCheck
+          }
+        >
           <Form.Label htmlFor="email" text={'Email address'} />
           <Form.Input
             type="email"
@@ -38,6 +50,8 @@ const SignUp = () => {
             value={email}
             onChange={onChangeEmail}
             placeholder="name@work-email.com"
+            isError={!email}
+            errorMsg="이메일을 입력해주세요."
           />
 
           <Form.Label htmlFor="nickName" text={'Nickname'} />
@@ -47,7 +61,9 @@ const SignUp = () => {
             name="nickName"
             value={nickName}
             onChange={onChangeNickName}
-            placeholder="name"
+            placeholder="Nickname"
+            isError={!nickName}
+            errorMsg="닉네임을 입력해주세요."
           />
 
           <Form.Label htmlFor="password" text={'Password'} />
@@ -58,6 +74,15 @@ const SignUp = () => {
             value={password}
             onChange={onChangePassword}
             placeholder="************"
+            isError={
+              !password ||
+              ((!!password || !!passwordCheck) && password !== passwordCheck)
+            }
+            errorMsg={
+              !password
+                ? '비밀번호를 입력해주세요'
+                : '비밀번호가 일치하지 않습니다.'
+            }
           />
 
           <Form.Label htmlFor="passwordCheck" text={'Password Check'} />
@@ -68,6 +93,15 @@ const SignUp = () => {
             value={passwordCheck}
             onChange={onChangePasswordCheck}
             placeholder="************"
+            isError={
+              !passwordCheck ||
+              ((!!password || !!passwordCheck) && password !== passwordCheck)
+            }
+            errorMsg={
+              !passwordCheck
+                ? '비밀번호를 입력해주세요'
+                : '비밀번호가 일치하지 않습니다.'
+            }
           />
 
           <Form.SubmitBtn>SignUp</Form.SubmitBtn>
