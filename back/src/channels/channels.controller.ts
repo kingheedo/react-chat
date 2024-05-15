@@ -1,6 +1,8 @@
 import { Controller, Get, Post } from '@nestjs/common';
 import { ChannelsService } from './channels.service';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Channel')
 @Controller('worspaces/:url/channels')
 export class ChannelsController {
   constructor(private readonly channelsService: ChannelsService) {}

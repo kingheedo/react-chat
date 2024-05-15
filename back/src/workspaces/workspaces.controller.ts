@@ -1,6 +1,8 @@
+import { ApiTags } from '@nestjs/swagger';
 import { WorkspacesService } from './workspaces.service';
 import { Controller, Delete, Get, Post } from '@nestjs/common';
 
+@ApiTags('Workspace')
 @Controller('workspaces')
 export class WorkspacesController {
   constructor(private readonly workspacesService: WorkspacesService) {}

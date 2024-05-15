@@ -7,6 +7,7 @@ import { UsersModule } from './users/users.module';
 import { WorkspacesModule } from './workspaces/workspaces.module';
 import { ChannelsModule } from './channels/channels.module';
 import { DmsModule } from './dms/dms.module';
+import { UsersService } from './users/users.service';
 
 /** 외부 서버로 가져온 키를 .env로 넣어주는 법
  *
@@ -33,7 +34,7 @@ import { DmsModule } from './dms/dms.module';
     DmsModule,
   ],
   controllers: [AppController],
-  providers: [AppService, ConfigService], //의존성주입(DI, Dependency Injection)을 위해 설정
+  providers: [AppService, ConfigService, UsersService], //의존성주입(DI, Dependency Injection)을 위해 설정
   // providers :[
   //원래 providers는 의존성주입을 할 때 이런 식의 형식으로 되어 있다.
   // { //클래스
