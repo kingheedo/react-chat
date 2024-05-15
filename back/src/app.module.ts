@@ -3,6 +3,10 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { LoggerMiddleWare } from './middlewares/logger.middleware';
+import { UsersModule } from './users/users.module';
+import { WorkspacesModule } from './workspaces/workspaces.module';
+import { ChannelsModule } from './channels/channels.module';
+import { DmsModule } from './dms/dms.module';
 
 /** 외부 서버로 가져온 키를 .env로 넣어주는 법
  *
@@ -23,6 +27,10 @@ import { LoggerMiddleWare } from './middlewares/logger.middleware';
       isGlobal: true,
       // load: [getEnv],
     }),
+    UsersModule,
+    WorkspacesModule,
+    ChannelsModule,
+    DmsModule,
   ],
   controllers: [AppController],
   providers: [AppService, ConfigService], //의존성주입(DI, Dependency Injection)을 위해 설정
