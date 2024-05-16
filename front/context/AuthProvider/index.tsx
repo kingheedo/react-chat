@@ -9,23 +9,29 @@ const AuthContext = createContext<null>(null);
 const AuthProvider = ({ children }: PropsWithChildren) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { error } = useGetUser();
+  const { user, error, isLoading, isValidating } = useGetUser();
   const { userId, setUserId } = useUserStore();
 
   useEffect(() => {
-    if (error) {
+    if (error || (!user && !isLoading)) {
       setUserId(-1);
       useUserStore.persist.clearStorage();
+    } else {
+      if (user && user.id > -1 && !isLoading) {
+        setUserId(user?.id);
+      }
     }
-  }, [error]);
+  }, [error, user]);
 
   useEffect(() => {
-    if (location.pathname === '/login' && userId >= 0) {
-      navigate('/');
-    } else if (location.pathname !== '/login' && userId < 0) {
-      navigate('/login');
+    if (!isLoading && location.pathname !== '/signUp') {
+      if ((user && user.id < 0) || userId < 0) {
+        navigate('/login');
+      } else {
+        navigate('/workspace/channel');
+      }
     }
-  }, [userId, location.pathname]);
+  }, [user, userId, location.pathname, isLoading]);
 
   return <AuthContext.Provider value={null}>{children}</AuthContext.Provider>;
 };

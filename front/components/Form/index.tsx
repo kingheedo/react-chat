@@ -3,7 +3,6 @@ import React, {
   createContext,
   useContext,
   useMemo,
-  useRef,
   useState,
 } from 'react';
 import {
@@ -18,7 +17,7 @@ import { isAxiosError } from 'axios';
 
 interface IFormProps {
   enabled: boolean;
-  onSubmit: () => Promise<void>;
+  onSubmit: () => Promise<void> | void;
 }
 
 interface ILabelProps {

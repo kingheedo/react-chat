@@ -1,20 +1,21 @@
 import request from '@apis/request';
 import { mutate } from 'swr';
 
-type PostSignIn = {
+type PostLoginReq = {
   email: string;
   password: string;
 };
 
-const postSignInApi = (payload: PostSignIn) => {
+const useLoginApi = (payload: PostLoginReq) => {
   return request.post('/api/users/login', payload).then((res) => res.data);
 };
-const useSignIn = (payload: PostSignIn) => {
-  const postSignIn = () => mutate('postSignIn', () => postSignInApi(payload));
+const useLogIn = () => {
+  const postLogin = (payload: PostLoginReq) =>
+    mutate('postLogin', () => useLoginApi(payload));
 
   return {
-    postSignIn,
+    postLogin,
   };
 };
 
-export default useSignIn;
+export default useLogIn;

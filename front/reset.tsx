@@ -50,11 +50,18 @@ const ResetCss = css`
     align-items: center;
     text-decoration: none;
     display: inline-flex;
-    position: relative;
   }
 
   a {
     text-decoration: none;
+  }
+
+  li {
+    list-style: none;
+  }
+
+  em {
+    font-style: normal;
   }
 `;
 

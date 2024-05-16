@@ -6,6 +6,7 @@ import Form from '@components/Form';
 import useSignIn from '@hooks/useMutate/useLogin';
 import useGetUser from '@hooks/useSWR/useGetUser';
 import useUserStore from '@store/UserStore';
+import useLogIn from '@hooks/useMutate/useLogin';
 
 const Login = () => {
   const {
@@ -23,36 +24,42 @@ const Login = () => {
     initValue: '',
   });
 
-  const { postSignIn } = useSignIn({
-    email,
-    password,
-  });
+  const { postLogin } = useLogIn();
   const navigate = useNavigate();
   const { setUserId } = useUserStore();
+  const { user, getUser } = useGetUser();
 
   /** 로그인시
-   * 
+   *
    * 1. 로그인 api요청
    * 2. state 초기화
-   * 3. user 정보 가져와서 전역 상태에 저장
-   * 4. 메인페이지로 이동
+   * 3. optimistic ui 적용
+   * 4. user 정보 가져와서 전역 상태에 저장
+   * 5. 메인페이지로 이동
    */
   const onSubmit = async () => {
     try {
-      await postSignIn();
+      const loginRes = await postLogin({
+        email,
+        password,
+      });
       setEmail('');
       setPassword('');
-      const user = await refetchGetUser();
-      if (user && user.id > -1) {
-        setUserId(user.id);
-        navigate('/');
+      const getUserData = await getUser(user, {
+        optimisticData: loginRes,
+        rollbackOnError: true,
+        populateCache: false,
+        revalidate: false,
+      });
+
+      if (getUserData && getUserData.id > -1) {
+        setUserId(getUserData.id);
+        navigate('/workspace/channel');
       }
     } catch (err) {
       console.log(err);
     }
   };
-
-  const { refetchGetUser } = useGetUser();
 
   return (
     <Section className="signin">

@@ -34,11 +34,7 @@ const SignUp = () => {
   } = useInput<string>({
     initValue: '',
   });
-  const { postSignUp } = useSignUp({
-    email,
-    nickname: nickName,
-    password,
-  });
+  const { postSignUp } = useSignUp();
   const navigate = useNavigate();
 
   /** 폼 제출시
@@ -47,7 +43,11 @@ const SignUp = () => {
    * 2. 로그인 페이지로 이동
    */
   const onSubmit = async () => {
-    await postSignUp().then(() => {
+    await postSignUp({
+      email,
+      nickname: nickName,
+      password,
+    }).then(() => {
       setEmail('');
       setNickName('');
       setPassword('');
