@@ -115,9 +115,9 @@ const Input = (props: IInputProps) => {
           >
             <path
               fill="currentColor"
-              fill-rule="evenodd"
+              fillRule="evenodd"
               d="M10 2.5a7.5 7.5 0 1 0 0 15 7.5 7.5 0 0 0 0-15M1 10a9 9 0 1 1 18 0 9 9 0 0 1-18 0m10-4a1 1 0 1 1-2 0 1 1 0 0 1 2 0m-.25 3.25a.75.75 0 0 0-1.5 0v5a.75.75 0 0 0 1.5 0z"
-              clip-rule="evenodd"
+              clipRule="evenodd"
             ></path>
           </svg>
           <span>{errorMsg}</span>

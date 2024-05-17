@@ -7,8 +7,8 @@ import Form from '@components/Form';
 import useInput from '@hooks/useInput';
 import useCreateWorkSpace from '@hooks/useMutate/useCreateWorkSpace';
 import useGetWorkspaces, { WorkSpace } from '@hooks/useSWR/useGetWorkspaces';
-import { useNavigate } from 'react-router-dom';
 import MyWorkSpaceList from './MyWorkSpaceList';
+import useCurrentWorkSpace from '@hooks/useCurrentWorkSpace';
 
 interface ISpaceListProps {
   list: WorkSpace[];
@@ -16,8 +16,9 @@ interface ISpaceListProps {
 
 const PopupTriggerBtns = [0];
 
-const MainSpace = ({ list }: ISpaceListProps) => {
+const CurrentWorkSpace = ({ list }: ISpaceListProps) => {
   const [popupIdx, setPopupIdx] = useState(-1);
+  const [curWorkSpaceIdx, setCurWorkSpaceIdx] = useState(0);
   const [isCenterModalOpen, setIsCenterModalOpen] = useState(false);
   const { value: name, onChangeInput: onChangeName } = useInput({
     initValue: '',
@@ -28,8 +29,12 @@ const MainSpace = ({ list }: ISpaceListProps) => {
 
   const { postCreateWorkSpace } = useCreateWorkSpace();
   const { mutateGetWorkSpaces } = useGetWorkspaces();
+  const currentWorkSpace = useCurrentWorkSpace();
 
-  const navigate = useNavigate();
+  /** 선택한 워크스페이스의 인덱스 */
+  const handleCurWorkSpaceIdx = (idx: number) => {
+    setCurWorkSpaceIdx(idx);
+  };
 
   /** 워크스페이스 추가하기 버튼 클릭 시
    *
@@ -43,17 +48,13 @@ const MainSpace = ({ list }: ISpaceListProps) => {
 
   /** 워크스페이스 생성하기 */
   const onSumbitAddWorkSpace = async () => {
-    console.log('워크스페이스 생성하기');
-    const res = await postCreateWorkSpace({
+    await postCreateWorkSpace({
       workspace: name,
       url: url,
     });
     mutateGetWorkSpaces();
-    // console.log('res', res);
     setIsCenterModalOpen(false);
   };
-
-  console.log('list', list);
 
   return (
     <SpaceContainer>
@@ -63,12 +64,18 @@ const MainSpace = ({ list }: ISpaceListProps) => {
         handlePopupIdx={(idx: number) => setPopupIdx(idx)}
       >
         <PopupModal.Trigger>
-          <PopupTriggerBtn />
+          {currentWorkSpace && (
+            <PopupTriggerBtn workspaceName={currentWorkSpace.name} />
+          )}
         </PopupModal.Trigger>
         <PopupModal.Content>
           <MyWorkSpaceList
             list={list}
             onClickAddWorkSpaceBtn={onClickAddWorkSpaceBtn}
+            curWorkSpace={{
+              idx: curWorkSpaceIdx,
+              handleIdx: handleCurWorkSpaceIdx,
+            }}
           />
         </PopupModal.Content>
       </PopupModal>
@@ -93,12 +100,16 @@ const MainSpace = ({ list }: ISpaceListProps) => {
   );
 };
 
-const PopupTriggerBtn = () => {
+interface IPopupTriggerBtnProps {
+  workspaceName: string;
+}
+
+const PopupTriggerBtn = ({ workspaceName }: IPopupTriggerBtnProps) => {
   return (
     <button>
-      <SquareIcon>H</SquareIcon>
+      <SquareIcon>{workspaceName[0]}</SquareIcon>
     </button>
   );
 };
 
-export default MainSpace;
+export default CurrentWorkSpace;

@@ -53,7 +53,9 @@ const ResetCss = css`
   }
 
   a {
+    color: inherit;
     text-decoration: none;
+    outline: none;
   }
 
   li {

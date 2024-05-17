@@ -1,7 +1,7 @@
-import Test from '@components/Test';
 import AuthProvider from '@context/AuthProvider';
 import Workspace from '@layouts/Workspace';
 import Channel from '@pages/Channel';
+import DirectMessage from '@pages/DircetMessage';
 import React, { Suspense, lazy } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { SWRConfig } from 'swr';
@@ -16,9 +16,15 @@ const App = () => {
         <Suspense fallback={<div>로딩중 ...</div>}>
           <Routes>
             <Route element={<Workspace />}>
-              <Route index path="/" element={<Test />} />
-              <Route path="/workspace/channel" element={<Channel />} />
-              <Route path="*" element={<Navigate replace to="/" />} />
+              <Route
+                path="/workspace/:workspaceUrl/channel/:channelName"
+                element={<Channel />}
+              />
+              <Route
+                path="/workspace/:workspaceUrl/dm/:userId"
+                element={<DirectMessage />}
+              />
+              <Route path="*" element={<div>404 not found</div>} />
             </Route>
             <Route path="/signup" element={<SignUpComponent />} />
             <Route path="/login" element={<LoginComponent />} />

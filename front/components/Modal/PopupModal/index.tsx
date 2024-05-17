@@ -60,6 +60,14 @@ const PopupModal = ({
 
 const Content = ({ children }: PropsWithChildren) => {
   const { openIdx, buttonRefs, handlePopupIdx } = usePopupModal();
+  const topPixel = useMemo(() => {
+    return buttonRefs.current[openIdx]?.getBoundingClientRect().top || 0;
+  }, [openIdx]);
+
+  const bottomPixel = useMemo(() => {
+    return buttonRefs.current[openIdx]?.getBoundingClientRect().height || 0;
+  }, [openIdx]);
+
   return (
     <div
       className={
@@ -68,10 +76,7 @@ const Content = ({ children }: PropsWithChildren) => {
       onMouseEnter={() => handlePopupIdx(openIdx)}
       onMouseLeave={() => handlePopupIdx(-1)}
       style={{
-        top:
-          buttonRefs.current[openIdx]?.getBoundingClientRect().top! +
-          buttonRefs.current[openIdx]?.getBoundingClientRect().height! +
-          2,
+        top: topPixel + bottomPixel + 2,
       }}
     >
       {children}

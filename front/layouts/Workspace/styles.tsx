@@ -7,7 +7,7 @@ export const Section = styled.section`
   > header {
     width: 100%;
     height: 40px;
-    background: green;
+    background: #3a073b;
   }
 
   .content {
@@ -19,8 +19,8 @@ export const Section = styled.section`
       flex-direction: column;
       justify-content: space-between;
       align-items: center;
+      background: #3a073b;
       padding: 8px 0;
-      background: red;
       flex: 0 0 70px;
 
       .top {
@@ -30,15 +30,25 @@ export const Section = styled.section`
       }
 
       .bottom {
-        button {
+        > button {
           width: 36px;
           height: 36px;
+          padding: 0;
+          overflow: hidden;
+
+          > span {
+            > img {
+              width: 100%;
+              height: 100%;
+            }
+          }
         }
       }
     }
     main {
+      display: flex;
       background: pink;
-      flex: 1 0 auto;
+      flex: 1 1 auto;
     }
   }
 `;

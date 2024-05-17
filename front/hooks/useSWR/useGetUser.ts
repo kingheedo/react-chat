@@ -5,6 +5,16 @@ type GetUserRes = {
   id: number;
   nickname: string;
   email: string;
+  Workspaces: {
+    id: number;
+    name: string;
+    url: string;
+    WorkSpaceMember: {
+      UserId: number;
+      WorkspaceId: number;
+      loggedInAt: string;
+    };
+  }[];
 };
 
 const getUserApi = () => {

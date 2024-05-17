@@ -35,7 +35,7 @@ const Login = () => {
    * 2. state 초기화
    * 3. optimistic ui 적용
    * 4. user 정보 가져와서 전역 상태에 저장
-   * 5. 메인페이지로 이동
+   * 5. 메인페이지로 이동ap
    */
   const onSubmit = async () => {
     try {
@@ -43,18 +43,17 @@ const Login = () => {
         email,
         password,
       });
-      setEmail('');
-      setPassword('');
       const getUserData = await getUser(user, {
         optimisticData: loginRes,
         rollbackOnError: true,
         populateCache: false,
         revalidate: false,
       });
-
+      setEmail('');
+      setPassword('');
       if (getUserData && getUserData.id > -1) {
         setUserId(getUserData.id);
-        navigate('/workspace/channel');
+        navigate(`/workspace/${getUserData.Workspaces[0].url}`);
       }
     } catch (err) {
       console.log(err);
