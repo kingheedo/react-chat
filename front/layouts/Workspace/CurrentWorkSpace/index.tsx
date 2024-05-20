@@ -14,7 +14,7 @@ interface ISpaceListProps {
   list: WorkSpace[];
 }
 
-const PopupTriggerBtns = [0];
+const popupTriggerBtns = [0];
 
 const CurrentWorkSpace = ({ list }: ISpaceListProps) => {
   const [popupIdx, setPopupIdx] = useState(-1);
@@ -59,15 +59,17 @@ const CurrentWorkSpace = ({ list }: ISpaceListProps) => {
   return (
     <SpaceContainer>
       <PopupModal
-        listLength={PopupTriggerBtns.length}
+        as="hover"
         openIdx={popupIdx}
         handlePopupIdx={(idx: number) => setPopupIdx(idx)}
       >
-        <PopupModal.Trigger>
-          {currentWorkSpace && (
-            <PopupTriggerBtn workspaceName={currentWorkSpace.name} />
-          )}
-        </PopupModal.Trigger>
+        {popupTriggerBtns.map((btn, btnIdx) => (
+          <PopupModal.Trigger key={btnIdx} idx={btnIdx}>
+            {currentWorkSpace && (
+              <PopupTriggerBtn workspaceName={currentWorkSpace.name} />
+            )}
+          </PopupModal.Trigger>
+        ))}
         <PopupModal.Content>
           <MyWorkSpaceList
             list={list}

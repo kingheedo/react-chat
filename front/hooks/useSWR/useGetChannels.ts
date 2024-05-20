@@ -13,7 +13,7 @@ type GetChannelRes = {
   }[];
 }[];
 
-const GetChannelApi = (payload: GetChannelReq) => {
+const getChannelsApi = (payload: GetChannelReq) => {
   return request
     .get<GetChannelRes>(`/api/workspaces/${payload}/channels`)
     .then((res) => res.data);
@@ -27,8 +27,8 @@ const useGetChannels = () => {
     isLoading,
     isValidating,
   } = useSWR(
-    currentWorkSpace?.name ? 'GetChannel' : null,
-    () => GetChannelApi(currentWorkSpace?.name || ''),
+    currentWorkSpace?.name ? 'getChannels' : null,
+    () => getChannelsApi(currentWorkSpace?.name || ''),
     {
       shouldRetryOnError: false,
     },

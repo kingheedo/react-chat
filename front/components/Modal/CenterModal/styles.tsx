@@ -18,7 +18,27 @@ export const CenterModalHead = styled.div`
 `;
 
 export const CenterModalBody = styled.div``;
-export const CenterModalFooter = styled.div``;
+export const CenterModalFooter = styled.div`
+  display: flex;
+  margin-top: 20px;
+
+  .primary-btn {
+    min-width: 80px;
+    height: 36px;
+    padding: 0 12px 1px;
+    margin-left: auto;
+  }
+
+  .primary-btn {
+    &.active {
+      color: #fff;
+      box-shadow: none;
+      background: #007a5a;
+      font-weight: 700;
+      transition: all 80ms linear;
+    }
+  }
+`;
 
 export const CenterModalCoseBtn = styled.button`
   position: absolute;

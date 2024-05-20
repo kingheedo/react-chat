@@ -27,6 +27,7 @@ const config: Configuration = {
       '@apis': path.resolve(__dirname, 'apis'),
       '@context': path.resolve(__dirname, 'context'),
       '@store': path.resolve(__dirname, 'store'),
+      '@hoc': path.resolve(__dirname, 'hoc'),
     },
   },
   entry: {

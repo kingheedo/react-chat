@@ -7,8 +7,11 @@ export type WorkSpace = {
   name: string;
   url: string;
   Members: {
-    id: number[];
-  };
+    id: number;
+    WorkspaceMember: {
+      UserId: number;
+    };
+  }[];
 };
 
 const useGetWorkSpaceApi = () =>
@@ -17,7 +20,9 @@ const useGetWorkSpaceApi = () =>
 /** 워크스페이스 가져오기 */
 const useGetWorkspaces = () => {
   const { data: workspaces, mutate: mutateGetWorkSpaces } = useSWR(
-    'getWorkSpace',
+    location.pathname !== '/login' && location.pathname !== '/signup'
+      ? 'getWorkSpace'
+      : null,
     () => useGetWorkSpaceApi(),
   );
 

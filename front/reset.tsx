@@ -33,23 +33,20 @@ const ResetCss = css`
   select,
   textarea {
     font-family: inherit;
+    outline: none;
+    padding: 0;
   }
 
   button {
     -webkit-user-select: none;
     user-select: none;
     cursor: pointer;
-    text-align: center;
     white-space: nowrap;
     -webkit-appearance: none;
     -webkit-tap-highlight-color: transparent;
     border: none;
-    border-radius: 4px;
     outline: none;
-    justify-content: center;
-    align-items: center;
     text-decoration: none;
-    display: inline-flex;
   }
 
   a {

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Btn } from './styles';
+import { ChCreateBtn } from '../styles';
 import SquareIcon from '@components/SquareIcon';
 
 interface IChannelCreateBtnProps {
@@ -7,10 +7,10 @@ interface IChannelCreateBtnProps {
 }
 const ChannelCreateBtn = ({ onClick }: IChannelCreateBtnProps) => {
   return (
-    <Btn onClick={onClick}>
+    <ChCreateBtn onClick={onClick}>
       <SquareIcon>+</SquareIcon>
       채널 추가
-    </Btn>
+    </ChCreateBtn>
   );
 };
 

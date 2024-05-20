@@ -5,8 +5,13 @@ export const SpaceContainer = styled.ul`
     margin-bottom: 4px;
 
     button {
+      justify-content: center;
+      align-items: center;
+      display: inline-flex;
       width: 36px;
       height: 36px;
+      border-radius: 4px;
+
       span {
         display: flex;
         justify-content: center;

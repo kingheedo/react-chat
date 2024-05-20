@@ -7,6 +7,8 @@ import useSignIn from '@hooks/useMutate/useLogin';
 import useGetUser from '@hooks/useSWR/useGetUser';
 import useUserStore from '@store/UserStore';
 import useLogIn from '@hooks/useMutate/useLogin';
+import { channel } from 'diagnostics_channel';
+import useGetChannels from '@hooks/useSWR/useGetChannels';
 
 const Login = () => {
   const {
@@ -43,18 +45,25 @@ const Login = () => {
         email,
         password,
       });
-      const getUserData = await getUser(user, {
-        optimisticData: loginRes,
-        rollbackOnError: true,
-        populateCache: false,
-        revalidate: false,
-      });
       setEmail('');
       setPassword('');
-      if (getUserData && getUserData.id > -1) {
-        setUserId(getUserData.id);
-        navigate(`/workspace/${getUserData.Workspaces[0].url}`);
+      const userData = await getUser();
+      if (userData) {
+        setUserId(userData.id);
+        navigate('/');
       }
+      // const getUserData = await getUser(user, {
+      //   optimisticData: loginRes,
+      //   rollbackOnError: true,
+      //   populateCache: false,
+      //   revalidate: false,
+      // });
+      // if (getUserData && getUserData.id > -1) {
+      //   console.log('getUserData', getUserData);
+
+      //   setUserId(getUserData.id);
+      //   navigate(`/workspace/${getUserData.Workspaces[0].url}`);
+      // }
     } catch (err) {
       console.log(err);
     }

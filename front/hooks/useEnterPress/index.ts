@@ -10,7 +10,7 @@ const useEnterPress = () => {
     onEnter: () => void,
   ) => {
     if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
+      // e.preventDefault();
       onEnter();
     }
   };

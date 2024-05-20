@@ -6,7 +6,7 @@
     "jsx": "react",
     "module": "esnext",
     "moduleResolution": "Node",
-    "target": "es5",
+    "target": "esnext",
     "strict": true,
     "resolveJsonModule": true,
     "baseUrl": ".",
@@ -16,10 +16,11 @@
       "@layouts/*": ["layouts/*"],
       "@pages/*": ["pages/*"],
       "@utils/*": ["utils/*"],
-      "@types/*": ["types/*"],
       "@apis/*": ["apis/*"],
       "@context/*": ["context/*"],
-      "@store/*": ["store/*"]
+      "@store/*": ["store/*"],
+      "@hoc/*": ["hoc/*"],
+      "@typings/*": ["typings/*"]
     }
   },
   "ts-node": {

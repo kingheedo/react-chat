@@ -6,8 +6,16 @@ type PostLoginReq = {
   password: string;
 };
 
+type PostLoginRes = {
+  id: number;
+  nickname: string;
+  email: string;
+};
+
 const useLoginApi = (payload: PostLoginReq) => {
-  return request.post('/api/users/login', payload).then((res) => res.data);
+  return request
+    .post<PostLoginRes>('/api/users/login', payload)
+    .then((res) => res.data);
 };
 const useLogIn = () => {
   const postLogin = (payload: PostLoginReq) =>

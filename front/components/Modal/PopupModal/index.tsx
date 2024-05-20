@@ -8,44 +8,49 @@ import React, {
   useState,
 } from 'react';
 import { Popup } from './styles';
+import BackDrop from '@components/BackDrop';
 
 interface IPopupContext {
+  as: 'hover' | 'click';
   openIdx: number;
-  listLength: number;
   buttonRefs: any;
   handlePopupIdx: (openIdx: number) => void;
 }
 
 interface IPopupModalProps {
-  listLength: number;
+  as: 'hover' | 'click';
   openIdx: number;
   handlePopupIdx: (openIdx: number) => void;
 }
 
 const PopupContext = createContext<IPopupContext>({
+  as: 'hover',
   openIdx: -1,
-  listLength: -1,
   handlePopupIdx: () => null,
   buttonRefs: [],
 });
 
 const PopupModal = ({
+  as,
   openIdx,
-  listLength,
   handlePopupIdx,
   children,
 }: IPopupModalProps & PropsWithChildren) => {
   const buttonRefs = useRef<HTMLLIElement[] | []>([]);
-
   const targetInfo = useMemo(
     () => ({
+      as,
       openIdx: openIdx,
-      listLength,
       buttonRefs,
       handlePopupIdx,
+      handleClose,
     }),
-    [openIdx, buttonRefs],
+    [as, openIdx, buttonRefs],
   );
+
+  const handleClose = () => {
+    handlePopupIdx(-1);
+  };
 
   useEffect(() => {
     handlePopupIdx(openIdx);
@@ -53,13 +58,26 @@ const PopupModal = ({
 
   return (
     <PopupContext.Provider value={{ ...targetInfo }}>
-      <Popup className="popup">{children}</Popup>
+      {as === 'click' && (
+        <>
+          {openIdx > -1 && (
+            <BackDrop
+              style={{
+                background: 'none',
+              }}
+              onClose={handleClose}
+            />
+          )}
+          <Popup className="popup">{children}</Popup>
+        </>
+      )}
+      {as === 'hover' && <Popup className="popup">{children}</Popup>}
     </PopupContext.Provider>
   );
 };
 
 const Content = ({ children }: PropsWithChildren) => {
-  const { openIdx, buttonRefs, handlePopupIdx } = usePopupModal();
+  const { as, openIdx, buttonRefs, handlePopupIdx } = usePopupModal();
   const topPixel = useMemo(() => {
     return buttonRefs.current[openIdx]?.getBoundingClientRect().top || 0;
   }, [openIdx]);
@@ -73,8 +91,8 @@ const Content = ({ children }: PropsWithChildren) => {
       className={
         openIdx > -1 ? 'info-popup-content active' : 'info-popup-content'
       }
-      onMouseEnter={() => handlePopupIdx(openIdx)}
-      onMouseLeave={() => handlePopupIdx(-1)}
+      {...(as === 'hover' && { onMouseEnter: () => handlePopupIdx(openIdx) })}
+      {...(as === 'hover' && { onMouseLeave: () => handlePopupIdx(-1) })}
       style={{
         top: topPixel + bottomPixel + 2,
       }}
@@ -84,20 +102,29 @@ const Content = ({ children }: PropsWithChildren) => {
   );
 };
 
-const Trigger = ({ children }: PropsWithChildren) => {
-  const { buttonRefs, listLength, handlePopupIdx } = usePopupModal();
+interface ITriggerProps {
+  idx: number;
+}
 
-  return Array.from({ length: listLength }).map((_, index) => (
+const Trigger = ({ idx, children }: ITriggerProps & PropsWithChildren) => {
+  const { as, buttonRefs, handlePopupIdx } = usePopupModal();
+
+  return (
     <li
       className="trigger-btn"
-      key={index}
-      onMouseEnter={() => handlePopupIdx(index)}
-      onMouseLeave={() => handlePopupIdx(-1)}
-      ref={(el) => (buttonRefs.current[index] = el)}
+      key={idx}
+      {...(as === 'hover' && { onMouseEnter: () => handlePopupIdx(idx) })}
+      {...(as === 'hover' && { onMouseLeave: () => handlePopupIdx(-1) })}
+      {...(as === 'click' && {
+        onClick: () => {
+          handlePopupIdx(idx);
+        },
+      })}
+      ref={(el) => (buttonRefs.current[idx] = el)}
     >
       {children}
     </li>
-  ));
+  );
 };
 
 PopupModal.Content = Content;

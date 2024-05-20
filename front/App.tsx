@@ -1,36 +1,52 @@
-import AuthProvider from '@context/AuthProvider';
 import Workspace from '@layouts/Workspace';
 import Channel from '@pages/Channel';
 import DirectMessage from '@pages/DircetMessage';
+import withAuth from '@hoc/withAuth';
 import React, { Suspense, lazy } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
-import { SWRConfig } from 'swr';
+import { SWRConfig, SWRConfiguration } from 'swr';
+import useUserStore from '@store/UserStore';
 
-const LoginComponent = lazy(() => import('@pages/Login'));
-const SignUpComponent = lazy(() => import('@pages/SignUp'));
+const LoginComponent = withAuth(lazy(() => import('@pages/Login')));
+const SignUpComponent = withAuth(lazy(() => import('@pages/SignUp')));
 
+const WorkSpaceComponent = withAuth(Workspace);
+const ChannelComponent = withAuth(Channel);
 const App = () => {
+  const { userId, setUserId } = useUserStore();
+  const swrOption: SWRConfiguration = {
+    // dedupingInterval: 8000,
+    // errorRetryCount: 0,
+    onError: (err, key, config) => {
+      // console.log('err', err.response.status === 401);
+      // if (err.response.status === 401) {
+      //   setUserId(-1);
+      // }
+      // if (key === 'getUser') {
+      //   setUserId(-1);
+      //   userId;
+      // }
+    },
+  };
   return (
-    <SWRConfig>
-      <AuthProvider>
-        <Suspense fallback={<div>로딩중 ...</div>}>
-          <Routes>
-            <Route element={<Workspace />}>
-              <Route
-                path="/workspace/:workspaceUrl/channel/:channelName"
-                element={<Channel />}
-              />
-              <Route
-                path="/workspace/:workspaceUrl/dm/:userId"
-                element={<DirectMessage />}
-              />
-              <Route path="*" element={<div>404 not found</div>} />
-            </Route>
-            <Route path="/signup" element={<SignUpComponent />} />
-            <Route path="/login" element={<LoginComponent />} />
-          </Routes>
-        </Suspense>
-      </AuthProvider>
+    <SWRConfig value={swrOption}>
+      <Suspense fallback={<div>로딩중 ...</div>}>
+        <Routes>
+          <Route path="/" element={<WorkSpaceComponent />}>
+            <Route
+              path="/workspace/:workspaceUrl/channel/:channelName"
+              element={<ChannelComponent />}
+            />
+            <Route
+              path="/workspace/:workspaceUrl/dm/:userId"
+              element={<DirectMessage />}
+            />
+          </Route>
+          <Route path="/signup" element={<SignUpComponent />} />
+          <Route path="/login" element={<LoginComponent />} />
+          <Route path="*" element={<div>404 not found</div>} />
+        </Routes>
+      </Suspense>
     </SWRConfig>
   );
 };

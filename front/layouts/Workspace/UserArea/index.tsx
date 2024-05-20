@@ -35,7 +35,6 @@ const UserArea = () => {
 
       if (!getUserData?.id) {
         setUserId(-1);
-        useUserStore.persist.clearStorage();
       }
       navigate('/login');
     } catch (err) {

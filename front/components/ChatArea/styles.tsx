@@ -69,12 +69,6 @@ export const TextWrap = styled.div`
     color: #1d1c1d;
     margin
   }
-  p {
-    font-size: 15px;
-    line-height: 1.46668;
-    word-wrap: break-word;
-    white-space:pre-line;
-  }
 `;
 
 export const ChatForm = styled.form`

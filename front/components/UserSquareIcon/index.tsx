@@ -1,13 +1,16 @@
 import SquareIcon from '@components/SquareIcon';
 import useGetUser from '@hooks/useSWR/useGetUser';
 import gravatar from 'gravatar';
-import React from 'react';
+import React, { PropsWithChildren } from 'react';
 
 interface IUserSquareIconProps {
   email: string;
 }
 
-const UserSquareIcon = ({ email }: IUserSquareIconProps) => {
+const UserSquareIcon = ({
+  email,
+  children,
+}: IUserSquareIconProps & PropsWithChildren) => {
   return (
     <SquareIcon>
       {email && (
@@ -19,6 +22,7 @@ const UserSquareIcon = ({ email }: IUserSquareIconProps) => {
           alt={email}
         />
       )}
+      {children}
     </SquareIcon>
   );
 };

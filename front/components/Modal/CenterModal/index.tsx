@@ -55,15 +55,15 @@ const CenterModal = ({
 };
 
 const Head = ({ children }: PropsWithChildren) => {
-  return <CenterModalHead>{children}</CenterModalHead>;
+  return <CenterModalHead className="head">{children}</CenterModalHead>;
 };
 
 const Body = ({ children }: PropsWithChildren) => {
-  return <CenterModalBody>{children}</CenterModalBody>;
+  return <CenterModalBody className="body">{children}</CenterModalBody>;
 };
 
 const Footer = ({ children }: PropsWithChildren) => {
-  return <CenterModalFooter>{children}</CenterModalFooter>;
+  return <CenterModalFooter className="footer">{children}</CenterModalFooter>;
 };
 
 const CloseBtn = () => {

@@ -18,11 +18,10 @@ const useCurrentWorkSpace = () => {
       if (user && user.Workspaces[0]) {
         return user?.Workspaces[0];
       }
-    } else {
-      return workspaces?.find(
-        (workspace) => workspace.url === params.workspaceUrl,
-      );
     }
+    return workspaces?.find(
+      (workspace) => workspace.url === params.workspaceUrl,
+    );
   }, [workspaces, params.workspaceUrl, user, location.pathname]);
 
   return currentWorkSpace;

@@ -1,3 +1,4 @@
+import { Item } from '@components/SideListItem/styles';
 import styled from '@emotion/styled';
 
 export const Section = styled.section`
@@ -47,7 +48,6 @@ export const Section = styled.section`
     }
     main {
       display: flex;
-      background: pink;
       flex: 1 1 auto;
     }
   }

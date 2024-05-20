@@ -1,20 +1,6 @@
 import styled from '@emotion/styled';
 
-export const ChannelWrap = styled.div`
-  background: #5c2c5d;
-  padding: 8px;
-  width: 240px;
-
-  .center-modal-wrap {
-    width: 100%;
-    max-width: 520px;
-    height: auto;
-  }
-`;
-
-export const ChannelListArea = styled.ul``;
-
-export const ChannelItem = styled.li`
+export const Item = styled.li`
   text-overflow: ellipsis;
   white-space: nowrap;
   display: block;

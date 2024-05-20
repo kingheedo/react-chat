@@ -1,7 +1,8 @@
 import SquareIcon from '@components/SquareIcon';
 import useGetChannels from '@hooks/useSWR/useGetChannels';
+import useGetWorkspaceMembers from '@hooks/useSWR/useGetWorkSpaceMembers';
 import { WorkSpace } from '@hooks/useSWR/useGetWorkspaces';
-import React from 'react';
+import React, { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 interface IPopupListProps {
@@ -24,21 +25,29 @@ const MyWorkSpaceList = ({
 }: IPopupListProps) => {
   const navigate = useNavigate();
   const { channels } = useGetChannels();
+  const { getWorkspaceMembers } = useGetWorkspaceMembers();
+
+  /** 워크스페이스 아이템 클릭 시 */
+  const onClickWorkSpaceItem = useCallback(
+    async (workspace: WorkSpace, workspaceIdx: number) => {
+      curWorkSpace.handleIdx(workspaceIdx);
+      if (channels && channels[0]) {
+        try {
+          navigate(`/workspace/${workspace.url}/channel/${channels[0].name}`);
+          await getWorkspaceMembers();
+        } catch (err) {
+          console.log(err);
+        }
+      }
+    },
+    [channels],
+  );
 
   return (
     <ul>
       {list.map((workspace, workspaceIdx) => (
         <li key={workspace.id}>
-          <button
-            onClick={() => {
-              curWorkSpace.handleIdx(workspaceIdx);
-              if (channels && channels[0]) {
-                navigate(
-                  `/workspace/${workspace.url}/channel/${channels[0].name}`,
-                );
-              }
-            }}
-          >
+          <button onClick={() => onClickWorkSpaceItem(workspace, workspaceIdx)}>
             <SquareIcon>{workspace.name[0]}</SquareIcon>
             {workspace.name}
           </button>

@@ -17,7 +17,7 @@ const useInput = <T>({ initValue }: IUseInputProps<T>): ReturnTypes<T> => {
 
   const onChangeInput = useCallback(
     (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-      setValue(e.target.value as T);
+      setValue(e.target.value.trim() as T);
     },
     [],
   );
