@@ -1,4 +1,5 @@
 import request from '@apis/request';
+import fetcher from '@utils/fetcher';
 import React from 'react';
 import useSWR from 'swr';
 
@@ -19,11 +20,11 @@ const useGetWorkSpaceApi = () =>
 
 /** 워크스페이스 가져오기 */
 const useGetWorkspaces = () => {
-  const { data: workspaces, mutate: mutateGetWorkSpaces } = useSWR(
+  const { data: workspaces, mutate: mutateGetWorkSpaces } = useSWR<WorkSpace[]>(
     location.pathname !== '/login' && location.pathname !== '/signup'
-      ? 'getWorkSpace'
+      ? '/api/workspaces'
       : null,
-    () => useGetWorkSpaceApi(),
+    fetcher
   );
 
   return { workspaces, mutateGetWorkSpaces };

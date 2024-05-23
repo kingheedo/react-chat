@@ -17,15 +17,17 @@ const WorkspaceMemberList = () => {
   const { socket } = useSocket(params.workspaceUrl || '');
   const [onlineList, setOnlineList] = useState<number[]>([]);
 
+  const handleOnlineList = (list: any) => {
+    setOnlineList(list);
+  };
+
   useEffect(() => {
-    socket?.on('onlineList', (list) => {
-      setOnlineList(list);
-    });
+    socket?.on('onlineList', handleOnlineList);
   }, [socket]);
 
   useEffect(() => {
     return () => {
-      socket?.connected && socket?.off('onlineList');
+      socket?.connected && socket?.off('onlineList', handleOnlineList);
     };
   }, [params.workspace]);
 

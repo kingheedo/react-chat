@@ -39,9 +39,9 @@ const OnlineStatusCircle = ({ active }: IOnlineStatusCircleProps) => {
     >
       <path
         fill="currentColor"
-        fill-rule="evenodd"
+        fillRule="evenodd"
         d="M7 10a3 3 0 1 1 6 0 3 3 0 0 1-6 0m3-4.5a4.5 4.5 0 1 0 0 9 4.5 4.5 0 0 0 0-9"
-        clip-rule="evenodd"
+        clipRule="evenodd"
       ></path>
     </Circle>
   );

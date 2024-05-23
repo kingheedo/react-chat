@@ -11,5 +11,5 @@ ReactDOM.createRoot(document.getElementById('app')!).render(
       <Global styles={ResetCss} />
       <App />
     </BrowserRouter>
-  </React.StrictMode>,
+  </React.StrictMode>
 );

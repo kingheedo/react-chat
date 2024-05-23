@@ -16,23 +16,29 @@ const withAuth = <P extends IWithAuthProps>(Component: ComponentType<P>) => {
 
     useEffect(() => {
       if (location.pathname === '/') {
-        if (userId < 0) {
+        if (user && user?.id < 0 && !isLoading) {
           navigate('/login');
-        } else if (user && user.Workspaces[0] && channels && channels[0]) {
+        } else if (
+          user &&
+          user.Workspaces[0] &&
+          channels &&
+          channels[0] &&
+          !isLoading
+        ) {
           navigate(
-            `/workspace/${user.Workspaces[0].url}/channel/${channels[0].name}`,
+            `/workspace/${user.Workspaces[0].url}/channel/${channels[0].name}`
           );
         }
       }
-    }, [location.pathname, userId, user, channels]);
+    }, [location.pathname, user?.id, user, channels]);
 
     useEffect(() => {
       if (location.pathname === '/login' || location.pathname === '/signup') {
-        if (userId >= 0) {
+        if (user && user?.id >= 0 && !isLoading) {
           navigate('/');
         }
       }
-    }, [location.pathname, userId]);
+    }, [location.pathname, user?.id]);
 
     return <Component {...props} />;
   };

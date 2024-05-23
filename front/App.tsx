@@ -1,9 +1,9 @@
 import Workspace from '@layouts/Workspace';
 import Channel from '@pages/Channel';
-import DirectMessage from '@pages/DircetMessage';
+import DirectMessage from '@pages/DirectMessage';
 import withAuth from '@hoc/withAuth';
 import React, { Suspense, lazy } from 'react';
-import { Navigate, Route, Routes } from 'react-router-dom';
+import { Route, Routes, useNavigate } from 'react-router-dom';
 import { SWRConfig, SWRConfiguration } from 'swr';
 import useUserStore from '@store/UserStore';
 
@@ -14,14 +14,17 @@ const WorkSpaceComponent = withAuth(Workspace);
 const ChannelComponent = withAuth(Channel);
 const App = () => {
   const { userId, setUserId } = useUserStore();
+  const navigate = useNavigate();
+
   const swrOption: SWRConfiguration = {
     // dedupingInterval: 8000,
     // errorRetryCount: 0,
+    revalidateOnFocus: false,
     onError: (err, key, config) => {
-      // console.log('err', err.response.status === 401);
-      // if (err.response.status === 401) {
-      //   setUserId(-1);
-      // }
+      console.log('err', err.response.status === 401);
+      if (err.response.status === 401) {
+        navigate('/login');
+      }
       // if (key === 'getUser') {
       //   setUserId(-1);
       //   userId;

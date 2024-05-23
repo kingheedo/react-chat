@@ -1,4 +1,5 @@
 import request from '@apis/request';
+import fetcher from '@utils/fetcher';
 import useSWR from 'swr';
 
 type GetUserRes = {
@@ -20,6 +21,8 @@ type GetUserRes = {
 const getUserApi = () => {
   return request.get<GetUserRes>('/api/users').then((res) => res.data);
 };
+
+//나의 정보
 const useGetUser = () => {
   const {
     data: user,
@@ -27,7 +30,7 @@ const useGetUser = () => {
     error,
     isLoading,
     isValidating,
-  } = useSWR('getUser', () => getUserApi());
+  } = useSWR<GetUserRes>('/api/users', fetcher);
 
   return {
     id: user?.id || -1,

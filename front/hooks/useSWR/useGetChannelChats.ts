@@ -1,33 +1,34 @@
-import request from '@apis/request';
-import { IDM } from '@typings/db';
+import { IChat } from '@typings/db';
 import fetcher from '@utils/fetcher';
-import { useMemo, useRef } from 'react';
+import React, { useMemo, useRef } from 'react';
 import Scrollbars from 'react-custom-scrollbars-2';
 import useSWR from 'swr';
 import useSWRInfinite from 'swr/infinite';
 
-interface GetUserReq {
-  params: { workspaceUrl: string; userId: string };
-}
+type UseGetChannelChats = {
+  workspaceUrl: string;
+  channelName: string;
+};
 
 const perPage = 20;
 
-const useGetDms = ({ params }: GetUserReq) => {
+const useGetChannelChats = ({
+  workspaceUrl,
+  channelName,
+}: UseGetChannelChats) => {
   const scrollbarRef = useRef<Scrollbars | null>(null);
 
   const getKey = (pageIndex: number, previousPageData: any) => {
     if (previousPageData && !previousPageData.length) return null; // 끝에 도달
-    return `/api/workspaces/${params.workspaceUrl}/dms/${params.userId}/chats?perPage=${perPage}&page=${pageIndex + 1}`; // SWR 키
+    return `/api/workspaces/${workspaceUrl}/channels/${channelName}/chats?perPage=${perPage}&page=${pageIndex + 1}`; // SWR 키
   };
+
   const {
-    data: dms,
-    mutate: mutateDms,
-    size,
-    setSize,
-    error,
+    data: channelChats,
     isLoading,
-    isValidating,
-  } = useSWRInfinite<IDM[]>(getKey, fetcher, {
+    setSize,
+    mutate: mutateChannelChats,
+  } = useSWRInfinite<IChat[]>(getKey, fetcher, {
     onSuccess: (data) => {
       if (data.length === 1) {
         setTimeout(() => {
@@ -36,25 +37,26 @@ const useGetDms = ({ params }: GetUserReq) => {
       }
     },
   });
+
   const isLastData = useMemo(() => {
-    if (dms && dms[dms.length - 1].length < perPage) {
+    if (
+      channelChats &&
+      channelChats[channelChats.length - 1].length < perPage
+    ) {
       return true;
     } else {
       return false;
     }
-  }, [dms, perPage]);
+  }, [channelChats, perPage]);
 
   return {
-    dms,
-    mutateDms,
-    size,
-    setSize,
-    isLastData,
-    error,
+    channelChats,
     isLoading,
-    isValidating,
+    isLastData,
     scrollbarRef,
+    setSize,
+    mutateChannelChats,
   };
 };
 
-export default useGetDms;
+export default useGetChannelChats;

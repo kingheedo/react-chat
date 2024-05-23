@@ -7,4 +7,9 @@ const request = axios.create({
   baseURL: process.env.NODE_ENV === prodUrl ? '' : devUrl,
   withCredentials: true,
 });
-export default request;
+
+const fetcher = (url: string) => {
+  return request.get(url).then((response) => response.data);
+};
+
+export default fetcher;

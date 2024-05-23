@@ -8,7 +8,7 @@ type ReturnTypes<T> = {
   value: T;
   setValue: React.Dispatch<React.SetStateAction<T>>;
   onChangeInput: (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => void;
 };
 
@@ -19,7 +19,7 @@ const useInput = <T>({ initValue }: IUseInputProps<T>): ReturnTypes<T> => {
     (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
       setValue(e.target.value.trim() as T);
     },
-    [],
+    []
   );
 
   return {

@@ -1,5 +1,6 @@
 import request from '@apis/request';
 import useCurrentWorkSpace from '@hooks/useCurrentWorkSpace';
+import fetcher from '@utils/fetcher';
 import { useParams } from 'react-router-dom';
 import useSWR from 'swr';
 
@@ -19,11 +20,13 @@ const getWorkspaceMembersApi = (workspaceUrl: GetWorkspaceMembersReq) => {
 const useGetWorkspaceMembers = () => {
   const currentWorkSpace = useCurrentWorkSpace();
 
-  const { data: workspaceMembers, mutate: getWorkspaceMembers } = useSWR(
+  const { data: workspaceMembers, mutate: getWorkspaceMembers } = useSWR<
+    GetWorkspaceMembers[]
+  >(
     currentWorkSpace?.url
-      ? 'getWorkspaceMembers' + currentWorkSpace?.url
+      ? `/api/workspaces/${currentWorkSpace?.url}/members`
       : null,
-    () => getWorkspaceMembersApi(currentWorkSpace?.url || ''),
+    fetcher
   );
 
   return {
