@@ -17,6 +17,7 @@ import { Dms } from './entities/Dms';
 // import { Mentions } from './entities/Mentions';
 import { Workspacemembers } from './entities/Workspacemembers';
 import { Workspaces } from './entities/Workspaces';
+import { AuthModule } from './auth/auth.module';
 
 /** 외부 서버로 가져온 키를 .env로 넣어주는 법
  *
@@ -42,6 +43,7 @@ import { Workspaces } from './entities/Workspaces';
     WorkspacesModule,
     ChannelsModule,
     DmsModule,
+    AuthModule,
     TypeOrmModule.forRoot({
       //entitiy와 mysql 커넥션
       type: 'mysql',

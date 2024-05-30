@@ -1,18 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  Column,
-  Entity,
-  Index,
-  OneToMany,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Workspaces } from './Workspaces';
 import { Dms } from './Dms';
 import { Channelchats } from './Channelchats';
 import { Channelmembers } from './Channelmembers';
 import { Workspacemembers } from './Workspacemembers';
+import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
 
-@Index('email', ['email'], { unique: true })
 @Entity('users', { schema: 'react-chat-test' })
 export class Users {
   @ApiProperty({
@@ -22,6 +16,7 @@ export class Users {
   @PrimaryGeneratedColumn({ type: 'int', name: 'id' })
   id: number;
 
+  @IsEmail()
   @ApiProperty({
     example: 'dhkdgmleh@gmail.com',
     description: '사용자  이메일',
@@ -29,6 +24,8 @@ export class Users {
   @Column({ type: 'varchar', name: 'email', unique: true, length: 30 })
   email: string;
 
+  @IsString()
+  @IsNotEmpty()
   @ApiProperty({
     example: '나는짱',
     description: '사용자 닉네임',
@@ -36,6 +33,8 @@ export class Users {
   @Column({ type: 'varchar', name: 'nickname', length: 30 })
   nickname: string;
 
+  // @IsString()
+  @IsNotEmpty()
   @ApiProperty({
     example: '*******',
     description: '사용자 비밀번호',
@@ -47,14 +46,22 @@ export class Users {
     example: '2022-12-12',
     description: '생성 날짜',
   })
-  @Column({ type: 'datetime', name: 'createdAt' })
+  @Column({
+    type: 'datetime',
+    name: 'createdAt',
+    default: () => 'CURRENT_TIMESTAMP()',
+  })
   createdAt: Date;
 
   @ApiProperty({
     example: '2022-12-12',
     description: '수정 날짜',
   })
-  @Column({ type: 'datetime', name: 'updatedAt' })
+  @Column({
+    type: 'datetime',
+    name: 'updatedAt',
+    default: () => 'CURRENT_TIMESTAMP()',
+  })
   updatedAt: Date;
 
   @ApiProperty({

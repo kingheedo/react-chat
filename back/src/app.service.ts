@@ -5,7 +5,8 @@ import { Injectable } from '@nestjs/common';
 export class AppService {
   constructor(private usersService: UsersService) {}
   getHello(): string {
-    return this.usersService.getUser();
+    return 'hello';
+    // return this.usersService.getUser();
     //process.env.COOKIE_SECRET
   }
 }

@@ -24,14 +24,22 @@ export class Workspacemembers {
     example: '2022-12-12',
     description: '생성 날짜',
   })
-  @Column({ type: 'datetime', name: 'createdAt' })
+  @Column({
+    type: 'datetime',
+    name: 'createdAt',
+    default: () => 'CURRENT_TIMESTAMP()',
+  })
   createdAt: Date;
 
   @ApiProperty({
     example: '2022-12-12',
     description: '수정 날짜',
   })
-  @Column({ type: 'datetime', name: 'updatedAt' })
+  @Column({
+    type: 'datetime',
+    name: 'updatedAt',
+    default: () => 'CURRENT_TIMESTAMP()',
+  })
   updatedAt: Date;
 
   @ApiProperty({
