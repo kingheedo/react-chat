@@ -1,7 +1,6 @@
 import SquareIcon from '@components/SquareIcon';
 import useLogout from '@hooks/useMutate/useLogout';
 import useGetUser from '@hooks/useSWR/useGetUser';
-import useUserStore from '@store/UserStore';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import gravatar from 'gravatar';
@@ -10,7 +9,6 @@ import UserSquareIcon from '@components/UserSquareIcon';
 const UserArea = () => {
   const navigate = useNavigate();
   const { user, getUser } = useGetUser();
-  const { setUserId } = useUserStore();
   const { postLogOut } = useLogout();
 
   /** 로그아웃시
@@ -21,21 +19,15 @@ const UserArea = () => {
    */
   const onClickLogout = async () => {
     try {
-      const getUserData = await getUser(await postLogOut(), {
-        optimisticData: {
-          id: -1,
-          nickname: '',
-          email: '',
-          Workspaces: [],
-        },
-        rollbackOnError: true,
-        populateCache: false,
-        revalidate: false,
-      });
-
-      if (!getUserData?.id) {
-        setUserId(-1);
-      }
+      await localStorage.setItem(
+        'TokenStore',
+        JSON.stringify({
+          state: {
+            accessToken: '',
+            refreshToken: '',
+          },
+        })
+      );
       navigate('/login');
     } catch (err) {
       console.log(err);

@@ -1,4 +1,5 @@
-import request from '@apis/request';
+import normalInstance from '@apis/normalInstance';
+import axios from 'axios';
 import { mutate } from 'swr';
 
 type PostLoginReq = {
@@ -7,13 +8,12 @@ type PostLoginReq = {
 };
 
 type PostLoginRes = {
-  id: number;
-  nickname: string;
-  email: string;
+  accessToken: string;
+  refreshToken: string;
 };
 
 const useLoginApi = (payload: PostLoginReq) => {
-  return request
+  return normalInstance
     .post<PostLoginRes>('/api/users/login', payload)
     .then((res) => res.data);
 };

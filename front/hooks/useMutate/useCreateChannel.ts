@@ -1,4 +1,4 @@
-import request from '@apis/request';
+import authInstance from '@apis/authInstance';
 import { mutate } from 'swr';
 
 type CreateChannelReq = {
@@ -9,9 +9,9 @@ type CreateChannelReq = {
 };
 
 const useCreateChannelApi = (payload: CreateChannelReq) =>
-  request.post(
+  authInstance.post(
     `/api/workspaces/${payload.workspaceNameParam}/channels`,
-    payload.data,
+    payload.data
   );
 
 /** 워크스페이스 생성하기 */

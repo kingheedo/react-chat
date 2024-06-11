@@ -1,5 +1,4 @@
 import SquareIcon from '@components/SquareIcon';
-import useGetUser from '@hooks/useSWR/useGetUser';
 import gravatar from 'gravatar';
 import React, { PropsWithChildren } from 'react';
 

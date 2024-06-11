@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { Outlet, useParams } from 'react-router-dom';
 import { Section } from './styles';
 import NavArea from './NavArea';
@@ -7,32 +7,40 @@ import UserArea from './UserArea';
 import CurrentWorkSpace from './CurrentWorkSpace';
 import useSocket from '@hooks/useSocket';
 import useGetChannels from '@hooks/useSWR/useGetChannels';
-import useUserStore from '@store/UserStore';
 import AsideArea from './AsideArea';
 import useGetUser from '@hooks/useSWR/useGetUser';
 
 const Workspace = () => {
   const params = useParams();
+  const { user, getUser } = useGetUser();
   const { workspaces } = useGetWorkspaces();
-  const { channels } = useGetChannels();
-  const { userId } = useUserStore();
-  const { user } = useGetUser();
+  const { channels } = useGetChannels(params.workspaceUrl || '');
   const { socket, disconnect } = useSocket(params.workspaceUrl || '');
 
   useEffect(() => {
-    if (userId && channels) {
+    if (user && channels) {
       socket?.emit('login', {
-        id: userId,
+        id: user.id,
         channels: channels.map((channel) => channel.id),
       });
     }
-  }, [userId, channels, socket]);
+  }, [user && user.id, channels]);
 
   useEffect(() => {
     return () => {
-      socket?.connected && socket?.disconnect();
+      disconnect();
     };
-  }, [params.workspace]);
+  }, [params.workspaceUrl]);
+
+  const workspaceList = useMemo(() => {
+    return (
+      workspaces?.filter((workspace) => {
+        return workspace.Workspacemembers.some(
+          (member) => member.UserId === user?.id
+        );
+      }) || []
+    );
+  }, [workspaces, user?.id]);
 
   return (
     <Section className="workspace">
@@ -40,13 +48,7 @@ const Workspace = () => {
       <div className="content">
         <nav>
           <div className="top">
-            <CurrentWorkSpace
-              list={
-                workspaces?.filter((workspace) =>
-                  workspace.Members.map((member) => member.id).includes(userId),
-                ) || []
-              }
-            />
+            <CurrentWorkSpace list={workspaceList} />
             <NavArea />
           </div>
           <div className="bottom">

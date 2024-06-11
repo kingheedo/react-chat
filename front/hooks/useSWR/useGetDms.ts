@@ -1,4 +1,3 @@
-import request from '@apis/request';
 import { IDM } from '@typings/db';
 import fetcher from '@utils/fetcher';
 import { useMemo, useRef } from 'react';

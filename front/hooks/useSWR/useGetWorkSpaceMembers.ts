@@ -1,4 +1,3 @@
-import request from '@apis/request';
 import useCurrentWorkSpace from '@hooks/useCurrentWorkSpace';
 import fetcher from '@utils/fetcher';
 import { useParams } from 'react-router-dom';
@@ -12,11 +11,6 @@ export type GetWorkspaceMembers = {
   email: string;
 };
 
-const getWorkspaceMembersApi = (workspaceUrl: GetWorkspaceMembersReq) => {
-  return request
-    .get<GetWorkspaceMembers[]>(`/api/workspaces/${workspaceUrl}/members`)
-    .then((res) => res.data);
-};
 const useGetWorkspaceMembers = () => {
   const currentWorkSpace = useCurrentWorkSpace();
 

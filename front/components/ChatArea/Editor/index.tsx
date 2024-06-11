@@ -51,7 +51,6 @@ const Editor = ({ handleSubmit }: IEditorProps) => {
     let arr = CheckPattern(editor.getText());
 
     if (arr) {
-      console.log('hi');
       arr = (arr + '').match(/@\[(.+?)\]\((\d+?)\)/);
       setChatVal(
         `<a href=http://localhost:3090/workspace/${params.workspaceUrl}/dm/${arr![2]}>@${arr![1]}</a>`
@@ -88,7 +87,6 @@ const Editor = ({ handleSubmit }: IEditorProps) => {
     <EditorWrap
       className="editor-wrap"
       onKeyDownCapture={(e) => {
-        console.log('e', e);
         if (
           e.key === 'Enter' &&
           !(

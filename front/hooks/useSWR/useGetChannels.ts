@@ -1,4 +1,3 @@
-import request from '@apis/request';
 import useSWR from 'swr';
 import useCurrentWorkSpace from '@hooks/useCurrentWorkSpace';
 import fetcher from '@utils/fetcher';
@@ -14,13 +13,7 @@ type GetChannelRes = {
   }[];
 }[];
 
-const getChannelsApi = (payload: GetChannelReq) => {
-  return request
-    .get<GetChannelRes>(`/api/workspaces/${payload}/channels`)
-    .then((res) => res.data);
-};
-const useGetChannels = () => {
-  const currentWorkSpace = useCurrentWorkSpace();
+const useGetChannels = (workspaceUrl: string) => {
   const {
     data: channels,
     mutate: mutateGetChannel,
@@ -28,14 +21,8 @@ const useGetChannels = () => {
     isLoading,
     isValidating,
   } = useSWR<GetChannelRes>(
-    // currentWorkSpace?.name ? 'getChannels' : null,
-    currentWorkSpace?.name
-      ? `/api/workspaces/${currentWorkSpace?.name}/channels`
-      : null,
-    fetcher,
-    {
-      shouldRetryOnError: false,
-    }
+    `/api/workspaces/${encodeURIComponent(workspaceUrl)}/channels`,
+    fetcher
   );
 
   return {

@@ -3,7 +3,7 @@ import useGetChannels from '@hooks/useSWR/useGetChannels';
 import useGetWorkspaceMembers from '@hooks/useSWR/useGetWorkSpaceMembers';
 import { WorkSpace } from '@hooks/useSWR/useGetWorkspaces';
 import React, { useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 interface IPopupListProps {
   list: WorkSpace[];
@@ -24,7 +24,8 @@ const MyWorkSpaceList = ({
   onClickAddWorkSpaceBtn,
 }: IPopupListProps) => {
   const navigate = useNavigate();
-  const { channels } = useGetChannels();
+  const params = useParams();
+  const { channels } = useGetChannels(params.workspaceUrl || '');
   const { getWorkspaceMembers } = useGetWorkspaceMembers();
 
   /** 워크스페이스 아이템 클릭 시 */
@@ -40,7 +41,7 @@ const MyWorkSpaceList = ({
         }
       }
     },
-    [channels],
+    [channels]
   );
 
   return (

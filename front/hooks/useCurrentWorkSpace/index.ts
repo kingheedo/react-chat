@@ -15,12 +15,12 @@ const useCurrentWorkSpace = () => {
 
   const currentWorkSpace = useMemo(() => {
     if (location.pathname === '/') {
-      if (user && user.Workspaces[0]) {
-        return user?.Workspaces[0];
+      if (workspaces && workspaces[0]) {
+        return workspaces[0];
       }
     }
     return workspaces?.find(
-      (workspace) => workspace.url === params.workspaceUrl,
+      (workspace) => workspace.url === params.workspaceUrl
     );
   }, [workspaces, params.workspaceUrl, user, location.pathname]);
 

@@ -1,6 +1,6 @@
 import useSendDm from '@hooks/useMutate/useSendDm';
 import useGetDms from '@hooks/useSWR/useGetDms';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Section } from './styles';
 import ChatArea, { Role } from '@components/ChatArea';
@@ -12,7 +12,7 @@ import useCurrentWorkSpace from '@hooks/useCurrentWorkSpace';
 
 const DirectMessage = () => {
   const params = useParams();
-  const { user, isLoading: isLoadingUser } = useGetUser();
+  const { user } = useGetUser();
   const { postSendDm } = useSendDm();
   const currentWorkspace = useCurrentWorkSpace();
   const { userWorkspace } = useGetUserWorkspace({
@@ -40,7 +40,7 @@ const DirectMessage = () => {
       return;
     }
     try {
-      await postSendDm({
+      const returnedDm: IDM = await postSendDm({
         params: {
           workspaceUrl: params.workspaceUrl || '',
           userId: params.userId || '',
@@ -50,67 +50,70 @@ const DirectMessage = () => {
         },
       });
 
+      await socket?.emit('clientDm', returnedDm);
       let prevDms = dms as any;
-      prevDms = [
+      let newDms;
+      newDms = [
         [
           {
-            id: dms && dms[0][0] ? dms[0][0].id + 1 : 1,
+            id: returnedDm.id,
             Receiver: {
-              nickname: userWorkspace?.nickname,
-              id: userWorkspace?.id,
-              email: userWorkspace?.email,
+              nickname: returnedDm.Receiver.nickname,
+              id: returnedDm.Receiver.id,
+              email: returnedDm.Receiver.email,
             },
             ReceiverId: Number(params.userId),
             Sender: {
-              nickname: user?.nickname,
-              id: user?.id,
-              email: user?.email,
+              nickname: returnedDm.Sender.nickname,
+              id: returnedDm.Sender.id,
+              email: returnedDm.Sender.email,
             },
-            SenderId: user?.id,
+            SenderId: returnedDm.Sender.id,
             WorkspaceId: currentWorkspace?.id,
-            content: content,
+            content: returnedDm.content,
             createdAt: new Date(),
             updatedAt: new Date(),
           },
           ...prevDms[0],
         ],
       ];
-      await mutateDms(prevDms, false);
+      await mutateDms(newDms, false);
       scrollbarRef.current?.scrollToBottom();
     } catch (err) {
       console.log(err);
     }
   };
 
-  const handleListenDm = async (data: any) => {
+  const handleListenDm = async (data: IDM) => {
     let prevDms = dms as any;
-    prevDms = [
-      [
-        {
-          id: prevDms[0][0].id,
-          Receiver: {
-            nickname: userWorkspace?.nickname,
-            id: userWorkspace?.id,
-            email: userWorkspace?.email,
+    if (data.SenderId !== user?.id && Number(params.userId) === data.SenderId) {
+      let newDms;
+      newDms = [
+        [
+          {
+            id: data.id,
+            Receiver: {
+              nickname: data.Receiver.nickname,
+              id: data.Receiver.id,
+              email: data.Receiver.email,
+            },
+            ReceiverId: Number(params.userId),
+            Sender: {
+              nickname: data.Sender.nickname,
+              id: data.Sender.id,
+              email: data.Sender.email,
+            },
+            SenderId: data.Sender.id,
+            WorkspaceId: currentWorkspace?.id,
+            content: data.content,
+            createdAt: new Date(),
+            updatedAt: new Date(),
           },
-          ReceiverId: userWorkspace?.id,
-          Sender: {
-            nickname: data.Sender.nickname,
-            id: data.Sender.id,
-            email: data.Sender.email,
-          },
-          SenderId: data.SenderId,
-          WorkspaceId: data.WorkspaceId,
-          content: data.content,
-          createdAt: data.createdAt,
-          updatedAt: data.createdAt,
-        },
-        ...prevDms[0],
-      ],
-    ];
-    console.log('prevDms', prevDms);
-
-    await mutateDms(prevDms, false);
+          ...prevDms[0],
+        ],
+      ];
+      await mutateDms(newDms, false);
+    }
   };
 
   useEffect(() => {

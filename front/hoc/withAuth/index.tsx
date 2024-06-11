@@ -1,44 +1,47 @@
-import useGetChannels from '@hooks/useSWR/useGetChannels';
+import { IToken } from '@apis/authInstance';
 import useGetUser from '@hooks/useSWR/useGetUser';
-import useUserStore from '@store/UserStore';
-import React, { ComponentType, useEffect, useState } from 'react';
+import useGetWorkspaces from '@hooks/useSWR/useGetWorkspaces';
+import React, { ComponentType, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 interface IWithAuthProps {}
 
 const withAuth = <P extends IWithAuthProps>(Component: ComponentType<P>) => {
   const withAuthCheck = (props: P) => {
-    const { user, isLoading } = useGetUser();
-    const { userId } = useUserStore();
-    const { channels } = useGetChannels();
+    const { user } = useGetUser();
+    const { workspaces, mutateGetWorkSpaces } = useGetWorkspaces();
     const navigate = useNavigate();
     const location = useLocation();
+    const tokens = JSON.parse(localStorage.getItem('TokenStore') || '')
+      .state as IToken;
 
-    useEffect(() => {
-      if (location.pathname === '/') {
-        if (user && user?.id < 0 && !isLoading) {
-          navigate('/login');
-        } else if (
-          user &&
-          user.Workspaces[0] &&
-          channels &&
-          channels[0] &&
-          !isLoading
-        ) {
-          navigate(
-            `/workspace/${user.Workspaces[0].url}/channel/${channels[0].name}`
+    const handler = async () => {
+      if (
+        tokens.accessToken &&
+        tokens.refreshToken &&
+        location.pathname === '/'
+      ) {
+        await mutateGetWorkSpaces();
+        if (workspaces && workspaces[0].url) {
+          return navigate(
+            `/workspace/${workspaces && workspaces[0].url}/channel/일반`
           );
         }
-      }
-    }, [location.pathname, user?.id, user, channels]);
-
-    useEffect(() => {
-      if (location.pathname === '/login' || location.pathname === '/signup') {
-        if (user && user?.id >= 0 && !isLoading) {
-          navigate('/');
+      } else if (tokens.accessToken && tokens.refreshToken) {
+        if (location.pathname === '/login' || location.pathname === '/signup') {
+          return navigate('/');
+        }
+      } else if (!tokens.accessToken || !tokens.refreshToken) {
+        if (location.pathname !== '/login' && location.pathname !== '/signup') {
+          return navigate('/login');
         }
       }
-    }, [location.pathname, user?.id]);
+    };
+
+    useEffect(() => {
+      handler();
+    }),
+      [location.pathname, user, workspaces, tokens];
 
     return <Component {...props} />;
   };

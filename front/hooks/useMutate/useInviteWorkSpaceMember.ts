@@ -1,4 +1,4 @@
-import request from '@apis/request';
+import authInstance from '@apis/authInstance';
 import { useParams } from 'react-router-dom';
 import { mutate } from 'swr';
 
@@ -8,7 +8,7 @@ type InviteMember = {
 };
 
 const useInviteWorkSpaceMemberApi = (payload: InviteMember) =>
-  request.post(`/api/workspaces/${payload.workspaceUrl}/members`, {
+  authInstance.post(`/api/workspaces/${payload.workspaceUrl}/members`, {
     email: payload.email,
   });
 
@@ -16,7 +16,7 @@ const useInviteWorkSpaceMemberApi = (payload: InviteMember) =>
 const useInviteWorkSpaceMember = () => {
   const postInviteWorkSpaceMember = (payload: InviteMember) =>
     mutate('postInviteWorkSpaceMember', () =>
-      useInviteWorkSpaceMemberApi(payload),
+      useInviteWorkSpaceMemberApi(payload)
     );
 
   return {

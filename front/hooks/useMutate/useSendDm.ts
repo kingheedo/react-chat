@@ -1,4 +1,4 @@
-import request from '@apis/request';
+import authInstance from '@apis/authInstance';
 import { mutate } from 'swr';
 
 interface PostSendDmReq {
@@ -7,10 +7,10 @@ interface PostSendDmReq {
 }
 
 const postSendDmApi = ({ params, body }: PostSendDmReq) => {
-  return request
+  return authInstance
     .post(
       `/api/workspaces/${params.workspaceUrl}/dms/${params.userId}/chats`,
-      body,
+      body
     )
     .then((res) => res.data);
 };

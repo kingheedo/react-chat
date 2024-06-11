@@ -5,7 +5,6 @@ import withAuth from '@hoc/withAuth';
 import React, { Suspense, lazy } from 'react';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import { SWRConfig, SWRConfiguration } from 'swr';
-import useUserStore from '@store/UserStore';
 
 const LoginComponent = withAuth(lazy(() => import('@pages/Login')));
 const SignUpComponent = withAuth(lazy(() => import('@pages/SignUp')));
@@ -13,22 +12,14 @@ const SignUpComponent = withAuth(lazy(() => import('@pages/SignUp')));
 const WorkSpaceComponent = withAuth(Workspace);
 const ChannelComponent = withAuth(Channel);
 const App = () => {
-  const { userId, setUserId } = useUserStore();
   const navigate = useNavigate();
 
   const swrOption: SWRConfiguration = {
     // dedupingInterval: 8000,
-    // errorRetryCount: 0,
+    errorRetryCount: 0,
     revalidateOnFocus: false,
     onError: (err, key, config) => {
-      console.log('err', err.response.status === 401);
-      if (err.response.status === 401) {
-        navigate('/login');
-      }
-      // if (key === 'getUser') {
-      //   setUserId(-1);
-      //   userId;
-      // }
+      console.log('err', err);
     },
   };
   return (

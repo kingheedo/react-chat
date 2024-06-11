@@ -1,4 +1,4 @@
-import request from '@apis/request';
+import authInstance from '@apis/authInstance';
 import React from 'react';
 import { mutate } from 'swr';
 
@@ -11,7 +11,7 @@ export type SendChannelChatReq = {
 };
 
 const sendChannelApi = (payload: SendChannelChatReq) => {
-  return request
+  return authInstance
     .post(
       `/api/workspaces/${payload.workspaceUrl}/channels/${payload.channelName}/chats`,
       payload.data

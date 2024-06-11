@@ -1,28 +1,15 @@
-import React, {
-  ForwardedRef,
-  RefObject,
-  forwardRef,
-  useEffect,
-  useState,
-} from 'react';
-import { ChatWrap, Header } from './styles';
+import React, { RefObject, lazy } from 'react';
+import { ChatWrap } from './styles';
 import 'react-quill/dist/quill.snow.css';
 import { IChat, IDM } from '@typings/db';
 import Editor from './Editor';
 import ContentListWrap from './ContentList';
 import HeaderWrap from './HeaderWrap';
-import { useParams } from 'react-router-dom';
 import Scrollbars from 'react-custom-scrollbars-2';
 
-const formats = [
-  'bold',
-  'italic',
-  'underline',
-  'strike',
-  'list',
-  'indent',
-  'link',
-];
+const LazyEditorComponent = lazy(
+  () => import('@components/ChatArea/Editor/index')
+);
 
 export enum Role {
   DM = 'DM',
@@ -90,7 +77,7 @@ const ChatArea = ({
         isLastData={isLastData}
         scrollbarRef={scrollbarRef}
       />
-      <Editor handleSubmit={handleSubmit} />
+      <LazyEditorComponent handleSubmit={handleSubmit} />
     </ChatWrap>
   );
 };

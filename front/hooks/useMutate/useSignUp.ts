@@ -1,4 +1,4 @@
-import request from '@apis/request';
+import normalInstance from '@apis/normalInstance';
 import { mutate } from 'swr';
 
 type PostSignUpReq = {
@@ -8,7 +8,7 @@ type PostSignUpReq = {
 };
 
 const postSignUpApi = (payload: PostSignUpReq) => {
-  return request.post('/api/users', payload).then((res) => res.data);
+  return normalInstance.post('/api/users', payload).then((res) => res.data);
 };
 const useSignUp = () => {
   const postSignUp = (payload: PostSignUpReq) =>

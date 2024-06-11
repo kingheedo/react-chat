@@ -49,7 +49,7 @@ const CurrentWorkSpace = ({ list }: ISpaceListProps) => {
   /** 워크스페이스 생성하기 */
   const onSumbitAddWorkSpace = async () => {
     await postCreateWorkSpace({
-      workspace: name,
+      name: name,
       url: url,
     });
     mutateGetWorkSpaces();

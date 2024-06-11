@@ -42,7 +42,6 @@ const ContentListWrap = ({
   const ChatList = useMemo(() => {
     return classifiedList(list.flat().reverse());
   }, [list]);
-  console.log('ChatList', ChatList[0]);
 
   return (
     <Scrollbar

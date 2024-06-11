@@ -23,7 +23,7 @@ const ChannelCreateModal = ({
   const params = useParams();
   const currentWorkSpace = useCurrentWorkSpace();
   const { createChannel } = useCreateChannel();
-  const { mutateGetChannel } = useGetChannels();
+  const { mutateGetChannel } = useGetChannels(params.workspaceUrl || '');
 
   /** 채널 생성 폼 제출 시  */
   const onSubmitCreaetChannel = async () => {

@@ -3,12 +3,9 @@ import React from 'react';
 import { Section } from './styles';
 import { Link, useNavigate } from 'react-router-dom';
 import Form from '@components/Form';
-import useSignIn from '@hooks/useMutate/useLogin';
 import useGetUser from '@hooks/useSWR/useGetUser';
-import useUserStore from '@store/UserStore';
 import useLogIn from '@hooks/useMutate/useLogin';
-import { channel } from 'diagnostics_channel';
-import useGetChannels from '@hooks/useSWR/useGetChannels';
+import useTokenStore from '@store/TokenStore';
 
 const Login = () => {
   const {
@@ -28,8 +25,8 @@ const Login = () => {
 
   const { postLogin } = useLogIn();
   const navigate = useNavigate();
-  const { setUserId } = useUserStore();
   const { user, getUser } = useGetUser();
+  const { setAccessToken, setRefreshToken } = useTokenStore();
 
   /** 로그인시
    *
@@ -47,23 +44,13 @@ const Login = () => {
       });
       setEmail('');
       setPassword('');
+      setAccessToken(loginRes?.accessToken || '');
+      setRefreshToken(loginRes?.refreshToken || '');
       const userData = await getUser();
+
       if (userData) {
-        setUserId(userData.id);
         navigate('/');
       }
-      // const getUserData = await getUser(user, {
-      //   optimisticData: loginRes,
-      //   rollbackOnError: true,
-      //   populateCache: false,
-      //   revalidate: false,
-      // });
-      // if (getUserData && getUserData.id > -1) {
-      //   console.log('getUserData', getUserData);
-
-      //   setUserId(getUserData.id);
-      //   navigate(`/workspace/${getUserData.Workspaces[0].url}`);
-      // }
     } catch (err) {
       console.log(err);
     }
@@ -108,7 +95,7 @@ const Login = () => {
         </Form>
         <p>
           처음 사용하시나요?
-          <Link to="/signUp">계정 생성</Link>
+          <Link to="/signup">계정 생성</Link>
         </p>
       </main>
     </Section>
