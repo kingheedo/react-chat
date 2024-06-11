@@ -1,7 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { HttpExceptionFilter } from './httpException.filter';
+import { HttpExceptionFilter } from './http-exception.filter';
 import { ValidationPipe } from '@nestjs/common';
 // import cookieParser from 'cookie-parser';
 // import session from 'express-session';
@@ -15,6 +15,13 @@ async function bootstrap() {
   app.useGlobalFilters(new HttpExceptionFilter());
   app.useGlobalPipes(new ValidationPipe());
 
+  app.enableCors({
+    origin:
+      process.env.NODE_ENV !== 'production'
+        ? 'http://localhost:3090'
+        : 'http://localhost:3090',
+    credentials: true,
+  });
   // app.use(cookieParser());
   // app.use(
   //   session({

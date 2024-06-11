@@ -1,31 +1,50 @@
 import { ApiTags } from '@nestjs/swagger';
 import { WorkspacesService } from './workspaces.service';
-import { Controller, Delete, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import { User } from '../../src/common/decorator/user.decorator';
+import { Users } from '@entities/Users';
+import { CreateWorkspace } from './dto/create.workspace.dto';
+import { CreateWorkspaceMember } from './dto/create.workspace.member.dto';
+import { JwtAuthGuard } from '../../src/auth/jwt-auth-guard';
 
 @ApiTags('Workspace')
-@Controller('workspaces')
+@Controller('api/workspaces')
 export class WorkspacesController {
   constructor(private readonly workspacesService: WorkspacesService) {}
-  @Get(':url')
+  @UseGuards(JwtAuthGuard)
   //워크스페이스 리스트 가져오기
-  getWorkSpaces() {}
+  @Get()
+  getWorkSpaces(@User() user: Users) {
+    console.log('user', user);
 
-  //워크스페이스 추가하기
-  @Post()
-  createWorkSpace() {}
+    return this.workspacesService.getWorkSpaces(user.id);
+  }
 
   //워크스페이스 멤버 목록 가져오기
+  @UseGuards(JwtAuthGuard)
   @Get(':url/members')
-  getAllMemberFromWorkSpaces() {}
-
-  //워크스페이스 멤버 추가하기
-  @Post(':url/member')
-  createMember() {}
-
-  @Delete(':url/members/:id')
-  deleteMember() {}
+  getMembers(@Param() param) {
+    return this.workspacesService.getWorkspaceMembers(param.url);
+  }
 
   //워크스페이스 특정 멤버 가져오기
+  @UseGuards(JwtAuthGuard)
   @Get(':url/members/:id')
-  getMemberFromWorkSpaces() {}
+  getMember(@Param() params) {
+    return this.workspacesService.getWorkspaceMember(params.url, params.id);
+  }
+
+  //워크스페이스 추가하기
+  @UseGuards(JwtAuthGuard)
+  @Post()
+  createWorkSpace(@Body() body: CreateWorkspace, @User() user: Users) {
+    return this.workspacesService.createWorkspace(body.name, body.url, user.id);
+  }
+
+  //워크스페이스 멤버 추가하기
+  @UseGuards(JwtAuthGuard)
+  @Post(':url/member')
+  createMember(@Param() param, @Body() body: CreateWorkspaceMember) {
+    return this.workspacesService.createWorkspaceMember(param.url, body.email);
+  }
 }

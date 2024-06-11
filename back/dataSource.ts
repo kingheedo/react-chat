@@ -3,7 +3,6 @@ import { Channelchats } from './src/entities/Channelchats';
 import { Channelmembers } from './src/entities/Channelmembers';
 import { Channels } from './src/entities/Channels';
 import { Dms } from './src/entities/Dms';
-// import { Mentions } from './src/entities/Mentions';
 import { Users } from './src/entities/Users';
 import { Workspacemembers } from './src/entities/Workspacemembers';
 import { Workspaces } from './src/entities/Workspaces';

@@ -43,6 +43,13 @@ export class Users {
   password: string;
 
   @ApiProperty({
+    example: '******',
+    description: '사용자 리프레쉬 토큰',
+  })
+  @Column({ type: 'text', name: 'refreshtoken', nullable: true })
+  refreshtoken: string;
+
+  @ApiProperty({
     example: '2022-12-12',
     description: '생성 날짜',
   })
@@ -71,24 +78,24 @@ export class Users {
   @Column({ type: 'datetime', name: 'deletedAt', nullable: true })
   deletedAt: Date | null;
 
-  @OneToMany(() => Workspaces, (workspace) => workspace.OwnerId)
+  @OneToMany(() => Workspaces, (workspace) => workspace.Owner)
   Workspaces: Workspaces[];
 
-  @OneToMany(() => Dms, (dms) => dms.SenderId)
+  @OneToMany(() => Dms, (dms) => dms.Sender)
   Dms: Dms[];
 
-  @OneToMany(() => Dms, (dms) => dms.ReceiverId)
+  @OneToMany(() => Dms, (dms) => dms.Receiver)
   Dms2: Dms[];
 
-  @OneToMany(() => Channelchats, (channels) => channels.UserId)
+  @OneToMany(() => Channelchats, (channels) => channels.User)
   Channelchats: Channelchats[];
 
-  @OneToMany(() => Channelmembers, (channelmembers) => channelmembers.UserId)
+  @OneToMany(() => Channelmembers, (channelmembers) => channelmembers.User)
   Channelmembers: Channelmembers[];
 
   @OneToMany(
     () => Workspacemembers,
-    (workspacemembers) => workspacemembers.UserId,
+    (workspacemembers) => workspacemembers.User,
   )
   Workspacemembers: Workspacemembers[];
 }

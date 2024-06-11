@@ -62,7 +62,7 @@ import { AuthModule } from './auth/auth.module';
         Workspaces,
       ],
       synchronize: false, //entities의 schema 모델 설정 관계들을 데이터베이스에 업데이트. db생성 후, production에서는 false설정(데이터 날아갈 수 있음)!
-      logging: true, // 개발할땐 켜주는게 좋다. orm은 관계가 복잡해질수록 비효율적일 수도 있다. orm이 어떤 sql문으로 쿼리를 날렸는지 확인하기 위해서 켜두자.
+      logging: process.env.NODE_ENV !== 'production', // 개발할땐 켜주는게 좋다. orm은 관계가 복잡해질수록 비효율적일 수도 있다. orm이 어떤 sql문으로 쿼리를 날렸는지 확인하기 위해서 켜두자.
       keepConnectionAlive: true,
       charset: 'utf8mb4_general_ci', // 이모티콘 사용을위해
     }),

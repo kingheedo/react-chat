@@ -26,11 +26,10 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     // 2
     //req.user로 들어갈 값이 결정되는 구간
     // if (Date.now() < payload.exp * 1000) {
-    if (payload.id && payload.email)
+    if (payload.email && payload.id)
       return {
         id: payload.id,
         email: payload.email,
       };
-    // }
   }
 }

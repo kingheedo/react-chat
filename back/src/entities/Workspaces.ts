@@ -74,15 +74,15 @@ export class Workspaces {
   @JoinColumn([{ name: 'OwnerId', referencedColumnName: 'id' }])
   Owner: Users;
 
-  @OneToMany(() => Channels, (channels) => channels.WorkspaceId)
+  @OneToMany(() => Channels, (channels) => channels.Workspace)
   Channels: Channels[];
 
-  @OneToMany(() => Dms, (dms) => dms.WorkspaceId)
+  @OneToMany(() => Dms, (dms) => dms.Workspace)
   Dms: Dms[];
 
   @OneToMany(
     () => Workspacemembers,
-    (workspacemembers) => workspacemembers.WorkspaceId,
+    (workspacemembers) => workspacemembers.Workspace,
   )
   Workspacemembers: Workspacemembers[];
 }

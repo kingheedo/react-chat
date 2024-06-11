@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  Headers,
   Post,
   UseGuards,
   UseInterceptors,
@@ -19,9 +20,9 @@ import { User } from '../../src/common/decorator/user.decorator';
 import { UndefinedToNullInterceptor } from '../../src/common/interceptors/undefinedToNull.interceptor';
 import { LocalAuthGuard } from '../../src/auth/local-auth-guard';
 import { AuthService } from '../../src/auth/auth.service';
-import { JwtAuthGuard } from 'src/auth/jwt-auth-guard';
+import { JwtAuthGuard } from '../../src/auth/jwt-auth-guard';
 import { Users } from '@entities/Users';
-import { JwtRefreshTokenGuard } from 'src/auth/jwt.refresh.token.guard';
+import { JwtRefreshTokenGuard } from '../../src/auth/jwt.refresh.token.guard';
 // import { LoggedInGuard } from 'src/auth/logged-in-guard';
 // import { NotLoggedInGuard } from 'src/auth/not-logged-in-guard';
 
@@ -39,8 +40,12 @@ export class UsersController {
   @ApiOperation({ summary: '내 정보 조회' })
   @UseGuards(JwtAuthGuard)
   @Get()
-  findUser(@User() user: Users) {
-    return this.usersService.findUser(user.email);
+  async findUser(@User() user: Users) {
+    console.log('user다', user);
+
+    const userInfo = await this.usersService.findUser(user);
+    console.log('userInfo', userInfo);
+    return userInfo;
   }
 
   @ApiOperation({ summary: '회원가입' })
@@ -63,9 +68,13 @@ export class UsersController {
   }
 
   @ApiOperation({ summary: '로그아웃' })
-  // @UseGuards(LoggedInGuard)
+  @UseGuards(JwtAuthGuard)
   @Post('logout')
-  logOut() {}
+  logOut(@Headers() headers, @User() user) {
+    return this.authService.logout(user);
+    // headers.authorization.replace('Bearer', '');
+    // return { message: '로그아웃 완료', success: true };
+  }
 
   @ApiOperation({ summary: '토큰 리프레쉬' })
   @UseGuards(JwtRefreshTokenGuard)

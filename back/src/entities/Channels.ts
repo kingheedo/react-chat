@@ -66,9 +66,9 @@ export class Channels {
   @JoinColumn([{ name: 'WorkspaceId', referencedColumnName: 'id' }])
   Workspace: Workspaces[];
 
-  @OneToMany(() => Channelchats, (channelchats) => channelchats.ChannelId)
+  @OneToMany(() => Channelchats, (channelchats) => channelchats.Channel)
   Channelchats: Channelchats[];
 
-  @OneToMany(() => Channelmembers, (channelmembers) => channelmembers.ChannelId)
-  channelmembers: Channelmembers[];
+  @OneToMany(() => Channelmembers, (channelmembers) => channelmembers.Channel)
+  Channelmembers: Channelmembers[];
 }
