@@ -18,6 +18,8 @@ import { Dms } from './entities/Dms';
 import { Workspacemembers } from './entities/Workspacemembers';
 import { Workspaces } from './entities/Workspaces';
 import { AuthModule } from './auth/auth.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 /** 외부 서버로 가져온 키를 .env로 넣어주는 법
  *
@@ -34,6 +36,10 @@ import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'uploads'),
+      serveRoot: '/uploads/',
+    }),
     ConfigModule.forRoot({
       // .env 설정
       isGlobal: true,

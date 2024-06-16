@@ -8,6 +8,9 @@ import { Users } from '@entities/Users';
 import { Channelmembers } from '@entities/Channelmembers';
 import { Channelchats } from '@entities/Channelchats';
 import { EventsModule } from '../../src/events/events.module';
+import { MulterModule } from '@nestjs/platform-express';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { multerOptionsFactory } from 'src/config/multer.config';
 
 @Module({
   imports: [
@@ -19,6 +22,11 @@ import { EventsModule } from '../../src/events/events.module';
       Channelchats,
     ]),
     EventsModule,
+    MulterModule.registerAsync({
+      imports: [ConfigModule],
+      useFactory: multerOptionsFactory,
+      inject: [ConfigService],
+    }),
   ],
   providers: [ChannelsService],
   controllers: [ChannelsController],
