@@ -12,11 +12,13 @@ const withAuth = <P extends IWithAuthProps>(Component: ComponentType<P>) => {
     const { workspaces, mutateGetWorkSpaces } = useGetWorkspaces();
     const navigate = useNavigate();
     const location = useLocation();
-    const tokens = JSON.parse(localStorage.getItem('TokenStore') || '')
-      .state as IToken;
+    const tokens = localStorage.getItem('TokenStore')
+      ? (JSON.parse(localStorage.getItem('TokenStore') || '').state as IToken)
+      : null;
 
     const handler = async () => {
       if (
+        tokens &&
         tokens.accessToken &&
         tokens.refreshToken &&
         location.pathname === '/'
@@ -27,11 +29,11 @@ const withAuth = <P extends IWithAuthProps>(Component: ComponentType<P>) => {
             `/workspace/${workspaces && workspaces[0].url}/channel/일반`
           );
         }
-      } else if (tokens.accessToken && tokens.refreshToken) {
+      } else if (tokens && tokens.accessToken && tokens.refreshToken) {
         if (location.pathname === '/login' || location.pathname === '/signup') {
           return navigate('/');
         }
-      } else if (!tokens.accessToken || !tokens.refreshToken) {
+      } else if (!tokens || !tokens.accessToken || !tokens.refreshToken) {
         if (location.pathname !== '/login' && location.pathname !== '/signup') {
           return navigate('/login');
         }
