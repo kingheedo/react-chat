@@ -5,9 +5,7 @@ import {
   Param,
   Post,
   Query,
-  UploadedFiles,
   UseGuards,
-  UseInterceptors,
 } from '@nestjs/common';
 import { ChannelsService } from './channels.service';
 import { ApiTags } from '@nestjs/swagger';
@@ -16,7 +14,6 @@ import { Users } from '@entities/Users';
 import { JwtAuthGuard } from '../../src/auth/jwt-auth-guard';
 import { CreateWorkspaceChannelDto } from './dto/create.workspace.channel.dto';
 import { PostChannelChatDto } from './dto/post.channel.chat.dto';
-import { FilesInterceptor } from '@nestjs/platform-express';
 // import { diskStorage } from 'multer';
 // import fs from 'fs';
 // import path from 'path';
@@ -118,13 +115,6 @@ export class ChannelsController {
       content: body.content,
       myId: user.id,
     });
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @Post('upload')
-  @UseInterceptors(FilesInterceptor('images', 2))
-  uploadFile(@UploadedFiles() files: Array<Express.MulterS3File>) {
-    return files.map((val) => val.location);
   }
 
   //읽지 않은 채팅 가져오기

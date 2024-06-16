@@ -20,6 +20,7 @@ import { Workspaces } from './entities/Workspaces';
 import { AuthModule } from './auth/auth.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import { UploadsModule } from './uploads/uploads.module';
 
 /** 외부 서버로 가져온 키를 .env로 넣어주는 법
  *
@@ -73,6 +74,7 @@ import { join } from 'path';
       charset: 'utf8mb4_general_ci', // 이모티콘 사용을위해
     }),
     TypeOrmModule.forFeature([Users]),
+    UploadsModule,
   ],
   controllers: [AppController],
   providers: [AppService, ConfigService, UsersService], //의존성주입(DI, Dependency Injection)을 위해 설정
