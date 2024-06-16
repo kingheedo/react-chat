@@ -56,6 +56,31 @@ const ContentListWrap = ({
 };
 
 const ChatContents = (role: Role, list: any) => {
+  const handleContent = (content: string) => {
+    console.log('content', content);
+    const imgRegex = /\<img\s[^>]*>/gi;
+    const stringWithoutImg = content.replaceAll(imgRegex, '');
+    const imgTags = content.match(imgRegex);
+
+    return (
+      <>
+        <div
+          className="chat-text"
+          dangerouslySetInnerHTML={{
+            __html: DOMPurify.sanitize(stringWithoutImg),
+          }}
+        />
+        <div className="chat-imgs">
+          <div className="grid-cotainer">
+            {imgTags?.map((img) => {
+              const newImgSrc = img.match(/https[^"]*/gi);
+              return <img src={(newImgSrc && newImgSrc[0]) || ''} />;
+            })}
+          </div>
+        </div>
+      </>
+    );
+  };
   switch (role) {
     case Role.CHAT:
       return list.map((value: any, index: number) => (
@@ -63,19 +88,17 @@ const ChatContents = (role: Role, list: any) => {
           <span className="date">{value[0]}</span>
           <em className="date-line" />
           {value[1].map((chat: IChat) => (
-            <ChatItem key={chat.id + chat.createdAt.toString()}>
+            <ChatItem
+              key={chat.id + chat.createdAt.toString()}
+              className="chat-item"
+            >
               <UserSquareIcon email={chat.User.email} />
               <TextWrap>
                 <div className="chat-user">
                   <strong>{chat.User.nickname}</strong>
                   <em>{format(chat.createdAt, 'aa HH:MM', { locale: ko })}</em>
                 </div>
-                <div
-                  className="chat-text"
-                  dangerouslySetInnerHTML={{
-                    __html: DOMPurify.sanitize(chat.content),
-                  }}
-                />
+                {handleContent(chat.content)}
               </TextWrap>
             </ChatItem>
           ))}
@@ -87,7 +110,10 @@ const ChatContents = (role: Role, list: any) => {
           <span className="date">{value[0]}</span>
           <em className="date-line" />
           {value[1].map((chat: IDM) => (
-            <ChatItem key={chat.id + chat.createdAt.toString()}>
+            <ChatItem
+              key={chat.id + chat.createdAt.toString()}
+              className="chat-item"
+            >
               <UserSquareIcon email={chat.Sender.email} />
               <TextWrap>
                 <div className="chat-user">

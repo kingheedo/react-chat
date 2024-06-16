@@ -1,5 +1,5 @@
-import useTokenStore, { ITokenStore } from '@store/TokenStore';
-import axios, { AxiosError, AxiosRequestConfig, isAxiosError } from 'axios';
+import { ITokenStore } from '@store/TokenStore';
+import axios, { AxiosError, AxiosRequestConfig } from 'axios';
 
 export interface IToken
   extends Pick<ITokenStore, 'accessToken' | 'refreshToken'> {}
@@ -14,9 +14,11 @@ const authInstance = axios.create({
 
 authInstance.interceptors.request.use(
   (config) => {
-    const tokens = JSON.parse(localStorage.getItem('TokenStore') || '')
-      .state as IToken;
-    if (!tokens.accessToken) {
+    const tokens = localStorage.getItem('TokenStore')
+      ? (JSON.parse(localStorage.getItem('TokenStore') || '').state as IToken)
+      : null;
+
+    if (!tokens || !tokens.accessToken) {
       return config;
     }
 
@@ -48,9 +50,13 @@ authInstance.interceptors.response.use(
     } = error;
     const originalRequest = config;
     let isRefreshing = false;
-    const tokens = JSON.parse(localStorage.getItem('TokenStore') || '')
-      .state as IToken;
-    if (status === 401 && tokens.refreshToken) {
+    console.log('tokens', localStorage.getItem('TokenStore'));
+
+    const tokens = localStorage.getItem('TokenStore')
+      ? (JSON.parse(localStorage.getItem('TokenStore') || '').state as IToken)
+      : null;
+
+    if (status === 401 && tokens && tokens.refreshToken) {
       if (!isRefreshing) {
         isRefreshing = true;
         try {

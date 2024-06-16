@@ -6,6 +6,38 @@ export const ChatWrap = styled.div`
   flex-direction: column;
   flex: 1;
   background: #fff;
+
+  .chat-content-list {
+    .chat-content {
+      .chat-text {
+        p:has(img) {
+          display: flex;
+          gap: 8px;
+          align-items: end;
+        }
+      }
+
+      .chat-imgs {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, 200px);
+
+        .grid-cotainer {
+          white-space: nowrap;
+
+          img {
+            display: block;
+            border-radius: 4px;
+            max-width: 100%;
+            height: auto;
+
+            &:not(:last-of-type) {
+              margin-right: 8px;
+            }
+          }
+        }
+      }
+    }
+  }
 `;
 export const Header = styled.div`
   padding: 12px;
@@ -69,10 +101,12 @@ export const ChatItem = styled.div`
 `;
 
 export const TextWrap = styled.div`
+  flex: 1;
   display: flex;
   flex-direction: column;
   margin: -4px 0 0 4px;
   word-break: break-all;
+
   .chat-user {
     display: flex;
     gap: 6px;
@@ -93,5 +127,16 @@ export const EditorWrap = styled.div`
     height: 30;
     bottom: 10;
     right: 10;
+  }
+
+  .ql-editor {
+    img {
+      width: 64px;
+      height: 64px;
+    }
+  }
+
+  .input-image {
+    display: none;
   }
 `;
