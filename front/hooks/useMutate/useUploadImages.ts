@@ -4,9 +4,7 @@ import { mutate } from 'swr';
 type UploadImageReq = FormData;
 
 const uploadImagesApi = (payload: UploadImageReq) => {
-  return authInstance
-    .post(`/api/workspaces/upload`, payload)
-    .then((res) => res.data);
+  return authInstance.post(`/api/uploads`, payload).then((res) => res.data);
 };
 
 const useUploadImages = () => {

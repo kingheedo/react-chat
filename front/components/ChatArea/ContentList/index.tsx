@@ -120,12 +120,7 @@ const ChatContents = (role: Role, list: any) => {
                   <strong>{chat.Sender.nickname}</strong>
                   <em>{format(chat.createdAt, 'aa HH:MM', { locale: ko })}</em>
                 </div>
-                <div
-                  className="chat-text"
-                  dangerouslySetInnerHTML={{
-                    __html: DOMPurify.sanitize(chat.content),
-                  }}
-                />
+                {handleContent(chat.content)}
               </TextWrap>
             </ChatItem>
           ))}
