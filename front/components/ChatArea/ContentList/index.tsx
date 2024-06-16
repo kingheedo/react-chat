@@ -8,6 +8,8 @@ import { ko } from 'date-fns/locale';
 import Scrollbars, { positionValues } from 'react-custom-scrollbars-2';
 import classifiedList from '@utils/classifiedList';
 import { Role } from '..';
+import { PhotoProvider } from 'react-photo-view';
+import PhotoViewer from '../PhotoViewer';
 
 interface IContentListWrapProps {
   role: Role;
@@ -57,11 +59,13 @@ const ContentListWrap = ({
 
 const ChatContents = (role: Role, list: any) => {
   const handleContent = (content: string) => {
-    console.log('content', content);
     const imgRegex = /\<img\s[^>]*>/gi;
     const stringWithoutImg = content.replaceAll(imgRegex, '');
-    const imgTags = content.match(imgRegex);
-
+    const imgTags = content.match(imgRegex) as string[];
+    const imgSrces = imgTags?.map((item) => {
+      const newImgSrc = item.match(/https[^"]*/gi);
+      return (newImgSrc && newImgSrc[0]) || '';
+    });
     return (
       <>
         <div
@@ -70,14 +74,13 @@ const ChatContents = (role: Role, list: any) => {
             __html: DOMPurify.sanitize(stringWithoutImg),
           }}
         />
-        <div className="chat-imgs">
-          <div className="grid-cotainer">
-            {imgTags?.map((img) => {
-              const newImgSrc = img.match(/https[^"]*/gi);
-              return <img src={(newImgSrc && newImgSrc[0]) || ''} />;
-            })}
+        {Array.isArray(imgTags) && imgTags.length > 0 && (
+          <div className="chat-imgs">
+            <div className="grid-cotainer">
+              <PhotoViewer imgSrces={imgSrces} />
+            </div>
           </div>
-        </div>
+        )}
       </>
     );
   };

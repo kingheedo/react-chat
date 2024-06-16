@@ -45,7 +45,7 @@ const PopupModal = ({
       handlePopupIdx,
       handleClose,
     }),
-    [as, openIdx, buttonRefs],
+    [as, openIdx, buttonRefs]
   );
 
   const handleClose = () => {
@@ -82,7 +82,7 @@ const Content = ({ children }: PropsWithChildren) => {
     return buttonRefs.current[openIdx]?.getBoundingClientRect().top || 0;
   }, [openIdx]);
 
-  const bottomPixel = useMemo(() => {
+  const heightPixel = useMemo(() => {
     return buttonRefs.current[openIdx]?.getBoundingClientRect().height || 0;
   }, [openIdx]);
 
@@ -94,7 +94,7 @@ const Content = ({ children }: PropsWithChildren) => {
       {...(as === 'hover' && { onMouseEnter: () => handlePopupIdx(openIdx) })}
       {...(as === 'hover' && { onMouseLeave: () => handlePopupIdx(-1) })}
       style={{
-        top: topPixel + bottomPixel + 2,
+        top: topPixel + heightPixel + 2,
       }}
     >
       {children}
