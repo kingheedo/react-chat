@@ -9,7 +9,7 @@ interface IPhotoViewerProps {
 const PhotoViewer = ({ imgSrces }: IPhotoViewerProps) => {
   return (
     <PhotoProvider>
-      {imgSrces?.map((src, index) => {
+      {imgSrces?.map((src) => {
         return (
           <PhotoView key={src} src={src}>
             <img src={src} alt={src} />
