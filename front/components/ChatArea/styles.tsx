@@ -22,7 +22,7 @@ export const ChatWrap = styled.div`
         grid-template-columns: repeat(auto-fit, 200px);
 
         .grid-cotainer {
-          white-space: nowrap;
+          display: flex;
 
           img {
             display: block;

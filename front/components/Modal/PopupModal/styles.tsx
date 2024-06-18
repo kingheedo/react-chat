@@ -4,7 +4,7 @@ export const Popup = styled.div`
   .info-popup {
     &-content {
       position: absolute;
-      z-index: 1;
+      z-index: 100;
       display: none;
       width: 360px;
       background: white;
