@@ -39,15 +39,12 @@ export class EventsGateway
   sendMessageFromClient(
     @ConnectedSocket() socket: Socket,
     @MessageBody()
-    data: {
-      url: string;
-      channelId: number;
-      content: string;
-    },
+    { url, content },
   ) {
+    const returnedData = { ...content, url };
     socket
-      .to(`${socket.nsp.name}-${data.channelId}`)
-      .emit('message', data.content);
+      .to(`${socket.nsp.name}-${content.ChannelId}`)
+      .emit('message', returnedData);
   }
 
   @SubscribeMessage('clientDm')
