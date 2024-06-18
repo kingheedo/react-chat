@@ -180,6 +180,7 @@ export class ChannelsService {
       })
       .innerJoinAndSelect('channelchats.User', 'user')
       .orderBy('channelchats.createdAt', 'DESC')
+      .addOrderBy('channelchats.id', 'DESC')
       .take(perPage)
       .skip(perPage * (page - 1))
       .getMany();
