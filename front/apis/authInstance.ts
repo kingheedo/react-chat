@@ -50,8 +50,6 @@ authInstance.interceptors.response.use(
     } = error;
     const originalRequest = config;
     let isRefreshing = false;
-    console.log('tokens', localStorage.getItem('TokenStore'));
-
     const tokens = localStorage.getItem('TokenStore')
       ? (JSON.parse(localStorage.getItem('TokenStore') || '').state as IToken)
       : null;
