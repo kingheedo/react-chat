@@ -203,22 +203,48 @@ export class ChannelsService {
     chat.UserId = myId;
     chat.content = content;
     const savedChat = await this.channelChatsRepository.save(chat);
-    return await this.channelChatsRepository.findOne({
-      where: {
-        id: savedChat.id,
-      },
-      relations: ['User', 'Channel'],
-      select: {
-        User: {
-          id: true,
-          nickname: true,
-          email: true,
+    const chats = await this.channelChatsRepository
+      .createQueryBuilder('channelChats')
+      .where('channelChats.id = :savedChatId', {
+        savedChatId: savedChat.id,
+      })
+      .innerJoinAndSelect('channelChats.User', 'user', 'user.id = :userId', {
+        userId: savedChat.UserId,
+      })
+      .innerJoinAndSelect(
+        'channelChats.Channel',
+        'channel',
+        'channel.name = :name',
+        {
+          name: channel.name,
         },
-      },
-    });
-    // this.eventsGateWay.server
-    //   .to(`/ws-${url}-${chatWithUser.ChannelId}`)
-    // .emit(`/ws-${url}-${chatWithUser.ChannelId}`, 'message', chatWithUser);
+      )
+      .getOne();
+    return chats;
   }
-  // async getUnreadChats(url: string, name: string, after: number) {}
+
+  async getUnreadsChatsCount({
+    url,
+    name,
+    after,
+  }: {
+    url: string;
+    name: string;
+    after: number;
+  }) {
+    const channelChatsCounts = await this.channelChatsRepository
+      .createQueryBuilder('channelChats')
+      .innerJoin('channelChats.Channel', 'channel', 'channel.name = :name', {
+        name,
+      })
+      .innerJoin('channel.Workspace', 'workspace', 'workspace.url = :url', {
+        url,
+      })
+      .where('channelChats.createdAt > :after', {
+        after: new Date(after),
+      })
+      .getCount();
+
+    return channelChatsCounts;
+  }
 }

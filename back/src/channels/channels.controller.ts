@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   Param,
+  ParseIntPipe,
   Post,
   Query,
   UseGuards,
@@ -117,16 +118,15 @@ export class ChannelsController {
     });
   }
 
-  //읽지 않은 채팅 가져오기
-  // @UseGuards(JwtAuthGuard)
-  // @Get(':url/channels/:name/unreads')
-  // getUnreadChats(
-  //   @Param('url') url,
-  //   @Param('name') name,
-  //   @Query('after') after: number,
-  // ) {
-  //   return this.channelsService.getUnreadChats(url, name, after);
-  // }
+  @UseGuards(JwtAuthGuard)
+  @Get(':url/channels/:name/chats/unread')
+  getUnreadsChatsCount(
+    @Param('url') url: string,
+    @Param('name') name: string,
+    @Query('after', ParseIntPipe) after: number,
+  ) {
+    return this.channelsService.getUnreadsChatsCount({ url, name, after });
+  }
 
   //채널 대화 추가하기
   // @Post(':name/chats')
