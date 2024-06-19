@@ -1,9 +1,5 @@
 # react-chat
 
-Skill: Emotion, Multer, MySql, Nestjs, Passport/jwt, React, SWR, Socket.io, Typeorm, Typescript
-Type: Side Project
-Position: Back-end, Front-end
-
 ![Untitled 4](https://github.com/kingheedo/react-chat/assets/52102550/f14cc251-938f-47fe-8e6e-b7d95bc8bb8c)
 
 ## 소개
