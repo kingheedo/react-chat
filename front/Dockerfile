@@ -16,19 +16,13 @@ COPY . .
 
 FROM nginx:1.21
 
-RUN apt-get update && apt-get install -y certbot cron
-
-COPY ./nginx/default.conf /etc/nginx/conf.d/default.conf
-
 COPY --from=build /src/dist /usr/share/nginx/html
 
-RUN mkdir -p /var/www/certbot
+# Let's Encrypt 인증서를 사용하여 HTTPS 설정
+COPY nginx/nginx.conf /etc/nginx/nginx.conf
+COPY nginx/default.conf /etc/nginx/conf.d/default.conf
 
-EXPOSE 80 443
+EXPOSE 80
+EXPOSE 443
 
-COPY ./init-letsencrypt.sh /init-letsencrypt.sh
-RUN chmod +x /init-letsencrypt.sh
-COPY ./renew-cert.sh /renew-cert.sh
-RUN chmod +x /renew-cert.sh
-
-CMD ["/bin/bash", "-c", "/init-letsencrypt.sh && cron && tail -f /var/log/cron.log"]
+CMD ["nginx", "-g", "daemon off;"]
