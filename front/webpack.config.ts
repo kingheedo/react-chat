@@ -19,20 +19,20 @@ const config: Configuration = {
   resolve: {
     extensions: ['.js', '.jsx', '.ts', '.tsx', '.json'],
     alias: {
-      '@hooks': path.resolve(__dirname, 'hooks'),
-      '@components': path.resolve(__dirname, 'components'),
-      '@layouts': path.resolve(__dirname, 'layouts'),
-      '@pages': path.resolve(__dirname, 'pages'),
-      '@utils': path.resolve(__dirname, 'utils'),
-      '@types': path.resolve(__dirname, 'types'),
-      '@apis': path.resolve(__dirname, 'apis'),
-      '@context': path.resolve(__dirname, 'context'),
-      '@store': path.resolve(__dirname, 'store'),
-      '@hoc': path.resolve(__dirname, 'hoc'),
+      '@hooks': path.resolve(__dirname, './src/hooks'),
+      '@components': path.resolve(__dirname, './src/components'),
+      '@layouts': path.resolve(__dirname, './src/layouts'),
+      '@pages': path.resolve(__dirname, './src/pages'),
+      '@utils': path.resolve(__dirname, './src/utils'),
+      '@types': path.resolve(__dirname, './src/types'),
+      '@apis': path.resolve(__dirname, './src/apis'),
+      '@context': path.resolve(__dirname, './src/context'),
+      '@store': path.resolve(__dirname, './src/store'),
+      '@hoc': path.resolve(__dirname, './src/hoc'),
     },
   },
   entry: {
-    app: './index',
+    app: './src/index',
   },
   module: {
     rules: [
@@ -91,7 +91,7 @@ const config: Configuration = {
     historyApiFallback: true, // react router
     port: 3090,
     devMiddleware: { publicPath: '/dist/' },
-    static: { directory: path.resolve(__dirname) },
+    static: { directory: path.resolve(__dirname, 'public') },
   },
 };
 

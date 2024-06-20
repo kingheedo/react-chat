@@ -9,7 +9,7 @@
     "target": "esnext",
     "strict": true,
     "resolveJsonModule": true,
-    "baseUrl": ".",
+    "baseUrl": "./src",
     "paths": {
       "@hooks/*": ["hooks/*"],
       "@components/*": ["components/*"],
