@@ -3,6 +3,7 @@ import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin';
 import webpack, { Configuration as WebpackConfiguration } from 'webpack';
 import { Configuration as WebpackDevServerConfiguration } from 'webpack-dev-server';
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
+import HtmlWebpackPlugin from 'html-webpack-plugin';
 
 interface Configuration extends WebpackConfiguration {
   devServer?: WebpackDevServerConfiguration;
@@ -81,6 +82,26 @@ const config: Configuration = {
     new webpack.EnvironmentPlugin({
       NODE_ENV: isDevelopment ? 'development' : 'production',
     }),
+
+    new HtmlWebpackPlugin({
+      template: './public/index.html', // 원본 HTML 템플릿 파일
+      filename: 'index.html', // 생성될 HTML 파일명
+      inject: true, // 자바스크립트 파일을 자동으로 삽입할 위치 (head 또는 body)
+      minify: !isDevelopment
+        ? {
+            removeComments: true,
+            collapseWhitespace: true,
+            removeRedundantAttributes: true,
+            useShortDoctype: true,
+            removeEmptyAttributes: true,
+            removeStyleLinkTypeAttributes: true,
+            keepClosingSlash: true,
+            minifyJS: true,
+            minifyCSS: true,
+            minifyURLs: true,
+          }
+        : false,
+    }),
   ],
   output: {
     path: path.join(__dirname, 'dist'),
@@ -108,7 +129,9 @@ if (isDevelopment && config.plugins) {
   );
 }
 if (!isDevelopment && config.plugins) {
-  config.plugins.push(new BundleAnalyzerPlugin({ analyzerMode: 'static' }));
+  config.plugins.push(
+    new BundleAnalyzerPlugin({ analyzerMode: 'static', openAnalyzer: false })
+  );
 }
 
 export default config;
