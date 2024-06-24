@@ -45,19 +45,12 @@ jobs:
         docker push kingheedo/reactchat-front:latest
 
     - name: Deploy to server
-      uses: easingthemes/ssh-deploy@v2.1.5
-      env:
-        SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
-        ARGS: "-avz --delete"
+      uses: appleboy/ssh-action@v0.1.2
       with:
-        remote_host: ${{ secrets.EC2_HOST }}
-        remote_user: ${{ secrets.REMOTE_USER }}
-        target: ${{ secrets.REMOTE_TARGET }}
-
-    - name: Restart Docker Compose
-      run: |
-        ssh -o StrictHostKeyChecking=no ${{ secrets.REMOTE_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
+        host: ${{ secrets.REMOTE_HOST }}
+        username: ${{ secrets.REMOTE_USER }}
+        key: ${{ secrets.EC2_SSH_KEY }}
+        script: |
           cd ${{ secrets.REMOTE_TARGET }}
           docker-compose down
           docker-compose up -d
-        EOF
