@@ -21,7 +21,8 @@ jobs:
         
       - name: Build and push Docker image
         run: |
-          docker build -t kingheedo/reactchathttps:latest react-chat/front
+          cd front
+          docker build -t kingheedo/reactchathttps:latest .
           docker push kingheedo/reactchathttps:latest
 
       - name: SSH to EC2 and deploy
