@@ -47,6 +47,13 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             sudo su -c 'mkdir -p /home/root/react-chat'
+            
+      - name: Add SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
 
       - name: Copy files via SCP as root
         run: |
