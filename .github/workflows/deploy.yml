@@ -17,15 +17,31 @@ jobs:
       run: |
         cp -r nginx front/
 
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v1
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '20'
+
+    - name: Install dependencies
+      run: |
+        cd front
+        npm install
+
+    - name: Build the React app
+      run: |
+        cd front
+        npm run build
 
     - name: Log in to Docker Hub
-      run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
 
-    - name: Build and push frontend Docker image
+    - name: Build and push Docker image
       run: |
-        docker build -t kingheedo/reactchat-front:latest ./front
+        cd front
+        docker build -t kingheedo/reactchat-front:latest .
         docker push kingheedo/reactchat-front:latest
 
     - name: Deploy to server
@@ -40,9 +56,8 @@ jobs:
 
     - name: Restart Docker Compose
       run: |
-        ssh -o StrictHostKeyChecking=no ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }} << 'EOF'
+        ssh -o StrictHostKeyChecking=no ${{ secrets.REMOTE_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
           cd ${{ secrets.REMOTE_TARGET }}
           docker-compose down
           docker-compose up -d
         EOF
-
