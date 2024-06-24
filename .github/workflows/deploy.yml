@@ -35,6 +35,26 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Add swap memory to EC2 instance
+        uses: appleboy/ssh-action@v0.1.7
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            # Check if swap file exists
+            if ! grep -q '/swapfile' /etc/fstab; then
+              sudo fallocate -l 2G /swapfile  # Create 2GB swap file (adjust size as needed)
+              sudo chmod 600 /swapfile         # Secure swap file
+              sudo mkswap /swapfile           # Make swap space
+              sudo swapon /swapfile           # Enable swap file
+              echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab  # Persist swap file
+            fi
+
+            # Verify swap space
+            sudo swapon --show
+            free -h
+
       - name: Create temporary project directory on EC2
         uses: appleboy/ssh-action@v0.1.7
         with:
