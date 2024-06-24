@@ -16,7 +16,7 @@ FROM nginx:alpine
 COPY nginx/nginx.conf /etc/nginx/nginx.conf
 
 # Copy built React app to Nginx public directory
-COPY --from=build /src/build /usr/share/nginx/html
+COPY --from=build /src/dist /usr/share/nginx/html
 
 EXPOSE 443
 
