@@ -39,17 +39,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Install Docker Compose on EC2
-        uses: appleboy/ssh-action@v0.1.7
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER }}
-          key: ${{ secrets.EC2_SSH_KEY }}
-          script: |
-            sudo curl -L "https://github.com/docker/compose/releases/download/2.27.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-            sudo chmod +x /usr/local/bin/docker-compose
-            sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
-
       - name: Create temporary project directory on EC2
         uses: appleboy/ssh-action@v0.1.7
         with:
@@ -81,6 +70,18 @@ jobs:
             sudo mkdir -p /home/ubuntu/react-chat
             sudo cp -r /home/ubuntu/react-chat-temp/* /home/ubuntu/react-chat/
             sudo rm -rf /home/ubuntu/react-chat-temp
+
+      - name: Install Docker Compose on EC2
+        uses: appleboy/ssh-action@v0.1.7
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+            sudo chmod +x /usr/local/bin/docker-compose
+            sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
+            sudo /usr/local/bin/docker-compose --version
 
       - name: SSH to EC2 and deploy
         uses: appleboy/ssh-action@v0.1.7
