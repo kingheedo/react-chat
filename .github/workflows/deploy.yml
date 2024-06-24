@@ -39,27 +39,33 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Copy files via SCP
+      - name: Create project directory on EC2 as root
+        uses: appleboy/ssh-action@v0.1.7
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            sudo su -c 'mkdir -p /home/root/react-chat'
+
+      - name: Copy files via SCP as root
         run: |
-          scp -r -i ~/.ssh/id_rsa * ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:/home/ec2-user/react-chat
+          scp -r -i ~/.ssh/id_rsa * ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:/home/root/react-chat
 
-      - name: SSH to EC2 and deploy
+      - name: SSH to EC2 and deploy as root
         uses: appleboy/ssh-action@v0.1.7
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            cd /home/ec2-user/react-chat
-            docker-compose down
-            docker-compose pull
-            docker-compose up -d
+            sudo su -c 'cd /home/root/react-chat && docker-compose down && docker-compose pull && docker-compose up -d'
 
-      - name: Renew SSL certificates
+      - name: Renew SSL certificates as root
         uses: appleboy/ssh-action@v0.1.7
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            docker run --rm -v /etc/letsencrypt:/etc/letsencrypt -v /var/lib/letsencrypt:/var/lib/letsencrypt certbot/certbot renew
+            sudo su -c 'docker run --rm -v /etc/letsencrypt:/etc/letsencrypt -v /var/lib/letsencrypt:/var/lib/letsencrypt certbot/certbot renew'
