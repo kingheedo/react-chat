@@ -54,9 +54,20 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
 
-      - name: Copy files via SCP
-        run: |
-          scp -r -i ~/.ssh/id_rsa * ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:/home/ubuntu/react-chat
+       - name: Copy files via SCP to temporary directory
+         run: |
+           scp -r -i ~/.ssh/id_rsa * ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:/home/ubuntu/react-chat-temp
+
+      - name: Move files to project directory and set permissions
+        uses: appleboy/ssh-action@v0.1.7
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            sudo su -c 'mkdir -p /home/ubuntu/react-chat'
+            sudo su -c 'cp -r /home/ubuntu/react-chat-temp/* /home/ubuntu/react-chat/'
+            sudo su -c 'rm -rf /home/ubuntu/react-chat-temp'
 
       - name: SSH to EC2 and deploy
         uses: appleboy/ssh-action@v0.1.7
