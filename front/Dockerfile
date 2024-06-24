@@ -10,7 +10,7 @@ RUN npm ci
 COPY . .
 
 # Copy nginx configuration
-COPY ./nginx ./nginx
+COPY ../nginx ./nginx
 
 RUN npm run build
 
@@ -21,7 +21,7 @@ FROM nginx:alpine
 # RUN apk add --no-cache certbot certbot-nginx bash curl
 
 # Copy Nginx configuration
-COPY ./nginx/nginx.conf /etc/nginx/nginx.conf
+COPY nginx/nginx.conf /etc/nginx/nginx.conf
 
 # Copy built React app to Nginx public directory
 COPY --from=build /src/dist /usr/share/nginx/html
