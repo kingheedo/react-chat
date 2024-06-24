@@ -4,11 +4,21 @@ services:
   front:
     build:
       context: ./front
-    image: kingheedo/reactchat-front:latest # 이미지 이름을 지정합니다
-    # container_name: reactchat # 컨테이너 이름을 지정합니다
     ports:
-      - '80:80'
-      - '443:443'
+      - "3090:80"
+      - "443:443"
     volumes:
-      - /etc/letsencrypt:/etc/letsencrypt
-      - /var/lib/letsencrypt:/var/lib/letsencrypt
+      - certbot-etc:/etc/letsencrypt
+      - certbot-var:/var/lib/letsencrypt
+  #   depends_on:
+  #     - backend
+
+  # backend:
+  #   build:
+  #     context: ./back
+  #   ports:
+  #     - "3095:3095"
+
+volumes:
+  certbot-etc:
+  certbot-var:
