@@ -13,9 +13,9 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Copy Nginx configuration
+    - name: Copy Nginx files to frontend directory
       run: |
-        cp -r nginx/* front/
+        cp -r nginx front/
 
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v1
@@ -23,35 +23,39 @@ jobs:
     - name: Log in to Docker Hub
       run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
-    - name: Build and push Docker image
+    - name: Build and push frontend Docker image
       run: |
-        docker build -t ${{ secrets.DOCKER_USERNAME }}/reactchat-front:latest .
-        docker push ${{ secrets.DOCKER_USERNAME }}/reactchat-front:latest
+        docker build -t kingheedo/reactchat-front:latest ./front
+        docker push kingheedo/reactchat-front:latest
 
     - name: SSH to EC2 and deploy
-      uses: appleboy/ssh-action@v0.1.5
+      uses: appleboy/ssh-action@v0.1.3
       with:
         host: ${{ secrets.EC2_HOST }}
         username: ec2-user
         key: ${{ secrets.EC2_SSH_KEY }}
         script: |
-          docker pull ${{ secrets.DOCKER_USERNAME }}/reactchat-front:latest
+          # Stop and remove existing containers
+          docker pull kingheedo/reactchat-front:latest
           docker stop reactchat-front || true
           docker rm reactchat-front || true
           docker run -d \
-            -p 80:80 \
+            -p 443:443 \
             --name reactchat-front \
-            ${{ secrets.DOCKER_USERNAME }}/reactchat-front:latest
+            kingheedo/reactchat-front:latest
 
-          # Set up Certbot (optional for HTTPS)
-          sudo apt-get update
-          sudo apt-get install -y certbot python3-certbot-nginx
-          sudo certbot --nginx --agree-tos --redirect --non-interactive -d reactchat.online -m dhkdgmleh@gmail.com
+          # Nginx 설정 임시 중지
+          sudo systemctl stop nginx
 
-          # Update Nginx config for HTTPS (if using Certbot)
+          # Certbot 실행
+          sudo certbot certonly --standalone --agree-tos --non-interactive -d reactchat.online -m dhkdgmleh@gmail.com
+          
+          # Nginx 설정 업데이트
           sudo sed -i "s/listen 80 default_server;/listen 443 ssl http2;/g" /etc/nginx/nginx.conf
           sudo sed -i "s/server_name _;/server_name reactchat.online;/g" /etc/nginx/nginx.conf
           sudo sed -i "/server_name reactchat.online;/a \\\tssl_certificate /etc/letsencrypt/live/reactchat.online/fullchain.pem;" /etc/nginx/nginx.conf
           sudo sed -i "/server_name reactchat.online;/a \\\tssl_certificate_key /etc/letsencrypt/live/reactchat.online/privkey.pem;" /etc/nginx/nginx.conf
 
-          sudo systemctl restart nginx
+          # Nginx 재시작
+          sudo systemctl start nginx
+
