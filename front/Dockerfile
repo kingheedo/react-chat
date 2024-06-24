@@ -13,7 +13,7 @@ RUN npm run build
 FROM nginx:alpine
 
 # Install certbot
-RUN apk add --no-cache certbot
+RUN apk add --no-cache certbot certbot-nginx
 
 # Copy built React app to Nginx public directory
 COPY --from=build /src/dist /usr/share/nginx/html
