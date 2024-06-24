@@ -10,7 +10,7 @@ RUN npm ci
 COPY . .
 
 # Copy nginx configuration
-COPY ../nginx ./nginx
+COPY ./nginx ./nginx
 
 RUN npm run build
 
