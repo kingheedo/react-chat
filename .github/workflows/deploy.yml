@@ -28,36 +28,21 @@ jobs:
         docker build -t kingheedo/reactchat-front:latest ./front
         docker push kingheedo/reactchat-front:latest
 
-    - name: SSH to EC2 and deploy
-      uses: appleboy/ssh-action@v0.1.3
+    - name: Deploy to server
+      uses: easingthemes/ssh-deploy@v2.1.5
+      env:
+        SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
+        ARGS: "-avz --delete"
       with:
-        host: ${{ secrets.EC2_HOST }}
-        username: ec2-user
-        key: ${{ secrets.EC2_SSH_KEY }}
-        script: |
-          # Stop and remove existing containers
-          docker pull kingheedo/reactchat-front:latest
-          docker stop reactchat-front || true
-          docker rm reactchat-front || true
-          docker run -d \
-            -p 80:80 \
-            --name reactchat-front \
-            kingheedo/reactchat-front:latest
+        remote_host: ${{ secrets.EC2_HOST }}
+        remote_user: ${{ secrets.REMOTE_USER }}
+        target: ${{ secrets.REMOTE_TARGET }}
 
-          # Nginx 설정 임시 중지
-          sudo systemctl stop nginx
-
-          # Certbot 실행
-            sudo apt-get update
-          sudo apt-get install -y certbot python3-certbot-nginx
-          sudo certbot --nginx --agree-tos --redirect --non-interactive -d reactchat.online -m dhkdgmleh@gmail.com
-          
-          # Nginx 설정 업데이트
-          sudo sed -i "s/listen 80 default_server;/listen 443 ssl http2;/g" /etc/nginx/nginx.conf
-          sudo sed -i "s/server_name _;/server_name reactchat.online;/g" /etc/nginx/nginx.conf
-          sudo sed -i "/server_name reactchat.online;/a \\\tssl_certificate /etc/letsencrypt/live/reactchat.online/fullchain.pem;" /etc/nginx/nginx.conf
-          sudo sed -i "/server_name reactchat.online;/a \\\tssl_certificate_key /etc/letsencrypt/live/reactchat.online/privkey.pem;" /etc/nginx/nginx.conf
-
-          # Nginx 재시작
-          sudo systemctl start nginx
+    - name: Restart Docker Compose
+      run: |
+        ssh -o StrictHostKeyChecking=no ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }} << 'EOF'
+          cd ${{ secrets.REMOTE_TARGET }}
+          docker-compose down
+          docker-compose up -d
+        EOF
 
