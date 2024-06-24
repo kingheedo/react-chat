@@ -18,8 +18,8 @@ FROM nginx:alpine
 
 # Copy Nginx configuration
 COPY ../nginx/nginx.conf /etc/nginx/nginx.conf
-COPY ../nginx/ssl/fullchain.pem /etc/letsencrypt/live/yourdomain.com/fullchain.pem
-COPY ../nginx/ssl/privkey.pem /etc/letsencrypt/live/yourdomain.com/privkey.pem
+COPY ../nginx/ssl/fullchain.pem /etc/letsencrypt/live/reactchat.online/fullchain.pem
+COPY ../nginx/ssl/privkey.pem /etc/letsencrypt/live/reactchat.online/privkey.pem
 #COPY nginx/ssl /etc/nginx/ssl
 
 # Copy built React app to Nginx public directory
