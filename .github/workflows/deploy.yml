@@ -21,7 +21,7 @@ jobs:
         
       - name: Build and push Docker image
         run: |
-          docker build -f ./front/reactchathttps:latest .
+          docker build -f react-chat/front/Dockerfile -t reactchathttps:latest react-chat/front
           docker tag reactchathttps:latest kingheedo/reactchathttps:latest
           docker push kingheedo/reactchathttps:latest
 
