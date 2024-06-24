@@ -17,8 +17,8 @@ FROM nginx:alpine
 # RUN apk add --no-cache certbot certbot-nginx bash curl
 
 # Copy Nginx configuration
+COPY nginx/ssl /etc/nginx/ssl
 COPY ../nginx/nginx.conf /etc/nginx/nginx.conf
-#COPY nginx/ssl /etc/nginx/ssl
 
 # Copy built React app to Nginx public directory
 COPY --from=build /src/dist /usr/share/nginx/html
