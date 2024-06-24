@@ -46,7 +46,7 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            sudo su -c 'mkdir -p /home/root/react-chat'
+            sudo su -c 'mkdir -p /home/ubuntu/react-chat'
             
       - name: Add SSH key
         run: |
@@ -57,7 +57,7 @@ jobs:
 
       - name: Copy files via SCP as root
         run: |
-          scp -r -i ~/.ssh/id_rsa * ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:/home/root/react-chat
+          scp -r -i ~/.ssh/id_rsa * ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:/home/ubuntu/react-chat
 
       - name: SSH to EC2 and deploy as root
         uses: appleboy/ssh-action@v0.1.7
@@ -66,7 +66,7 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            sudo su -c 'cd /home/root/react-chat && docker-compose down && docker-compose pull && docker-compose up -d'
+            sudo su -c 'cd /home/ubuntu/react-chat && docker-compose down && docker-compose pull && docker-compose up -d'
 
       - name: Renew SSL certificates as root
         uses: appleboy/ssh-action@v0.1.7
