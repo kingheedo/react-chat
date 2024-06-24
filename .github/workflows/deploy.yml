@@ -53,11 +53,8 @@ jobs:
             -v /etc/letsencrypt/live/reactchat.online:/etc/letsencrypt/live/reactchat.online \
             kingheedo/reactchat-front:latest
 
-          # Nginx 설정 임시 중지
-          sudo systemctl stop nginx
-
-          # Certbot 실행
-          sudo certbot certonly --standalone --agree-tos --non-interactive -d reactchat.online -m dhkdgmleh@gmail.com
+          # Certbot 실행 (웹 루트 인증 방식)
+          sudo certbot certonly --webroot -w /usr/share/nginx/html --agree-tos --non-interactive -d reactchat.online -m dhkdgmleh@gmail.com
 
           # Nginx 설정 업데이트
           sudo sed -i "s/listen 80 default_server;/listen 443 ssl http2;/g" /etc/nginx/nginx.conf
@@ -66,4 +63,4 @@ jobs:
           sudo sed -i "/server_name reactchat.online;/a \\\tssl_certificate_key /etc/letsencrypt/live/reactchat.online/privkey.pem;" /etc/nginx/nginx.conf
 
           # Nginx 재시작
-          sudo systemctl start nginx
+          sudo systemctl restart nginx
