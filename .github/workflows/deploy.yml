@@ -44,6 +44,19 @@ jobs:
         docker build -t kingheedo/reactchat-front:latest .
         docker push kingheedo/reactchat-front:latest
 
+    - name: Install Docker and Docker Compose
+      run: |
+        ssh -o StrictHostKeyChecking=no ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }} \
+          "curl -fsSL https://get.docker.com -o get-docker.sh && \
+           sudo sh get-docker.sh"
+        ssh -o StrictHostKeyChecking=no ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }} \
+          "sudo usermod -aG docker ${{ secrets.REMOTE_USER }} && \
+           sudo systemctl enable docker && \
+           sudo systemctl start docker"
+        ssh -o StrictHostKeyChecking=no ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }} \
+          "sudo curl -L 'https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)' -o /usr/local/bin/docker-compose && \
+           sudo chmod +x /usr/local/bin/docker-compose"
+
     - name: Deploy to server
       uses: appleboy/ssh-action@v0.1.2
       with:
