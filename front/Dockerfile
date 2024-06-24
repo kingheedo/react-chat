@@ -8,7 +8,8 @@ Run npm ci
 
 COPY . .
 
-COPY /reactchat/nginx .
+# Copy nginx configuration
+COPY ../nginx ./nginx
 
 RUN npm run build
 
