@@ -16,7 +16,7 @@ jobs:
     - name: Copy Nginx files to frontend directory
       run: |
         mkdir -p front/nginx
-        cp -r nginx/* front/nginx/
+        cp -r nginx/nginx.conf front/nginx/nginx.conf
 
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v1
