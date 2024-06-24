@@ -17,9 +17,7 @@ FROM nginx:alpine
 # RUN apk add --no-cache certbot certbot-nginx bash curl
 
 # Copy Nginx configuration
-COPY ../nginx/nginx.conf /etc/nginx/nginx.conf
-COPY ../nginx/ssl/fullchain.pem /etc/letsencrypt/live/reactchat.online/fullchain.pem
-COPY ../nginx/ssl/privkey.pem /etc/letsencrypt/live/reactchat.online/privkey.pem
+COPY nginx/nginx.conf /etc/nginx/nginx.conf
 #COPY nginx/ssl /etc/nginx/ssl
 
 # Copy built React app to Nginx public directory

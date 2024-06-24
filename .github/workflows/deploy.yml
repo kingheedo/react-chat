@@ -58,7 +58,7 @@ jobs:
           sudo sed -i "s/server_name _;/server_name reactchat.online;/g" /etc/nginx/nginx.conf
           sudo sed -i "/server_name reactchat.online;/a \\\tssl_certificate /etc/letsencrypt/live/reactchat.online/fullchain.pem;" /etc/nginx/nginx.conf
           sudo sed -i "/server_name reactchat.online;/a \\\tssl_certificate_key /etc/letsencrypt/live/reactchat.online/privkey.pem;" /etc/nginx/nginx.conf
-          
+
           # Restart Nginx to apply changes
           sudo systemctl restart nginx
 
