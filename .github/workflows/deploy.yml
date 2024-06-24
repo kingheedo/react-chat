@@ -47,9 +47,16 @@ jobs:
         key: ${{ secrets.EC2_SSH_KEY }}
         script: |
           # Stop and remove existing containers
-          docker pull kingheedo/reactchat-front:latest
+          docker pull ${{ secrets.DOCKER_USERNAME }}/my-react-frontend:latest
           docker stop reactchat-front || true
           docker rm reactchat-front || true
+
+          # Create a directory for SSL certificates if it doesn't exist
+          mkdir -p /etc/letsencrypt/live/reactchat.online
+
+          # Copy SSL certificates from secrets to the server
+          echo "${{ secrets.FULLCHAIN_PEM }}" > /etc/letsencrypt/live/reactchat.online/fullchain.pem
+          echo "${{ secrets.PRIVKEY_PEM }}" > /etc/letsencrypt/live/reactchat.online/privkey.pem
 
           docker run -d \
           -p 443:443 \
