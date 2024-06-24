@@ -28,17 +28,6 @@ jobs:
         docker build -t kingheedo/reactchat-front:latest ./front
         docker push kingheedo/reactchat-front:latest
 
-      #- name: Build and push backend Docker image
-      #  run: |
-      #  docker build -t YOUR_DOCKERHUB_USERNAME/reactchat-backend:latest ./back
-      #  docker push YOUR_DOCKERHUB_USERNAME/reactchat-backend:latest
-
-    - name: Install Certbot and obtain SSL certificate
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y certbot python3-certbot-nginx
-        sudo certbot --nginx --agree-tos --redirect --non-interactive -d reactchat.online -m dhkdgmleh@gmail.com
-
     - name: SSH to EC2 and deploy
       uses: appleboy/ssh-action@v0.1.3
       with:
@@ -47,7 +36,7 @@ jobs:
         key: ${{ secrets.EC2_SSH_KEY }}
         script: |
           # Stop and remove existing containers
-          docker pull ${{ secrets.DOCKER_USERNAME }}/reactchat-front:latest
+          docker pull kingheedo/reactchat-front:latest
           docker stop reactchat-front || true
           docker rm reactchat-front || true
 
@@ -59,17 +48,22 @@ jobs:
           echo "${{ secrets.PRIVKEY_PEM }}" > /etc/letsencrypt/live/reactchat.online/privkey.pem
 
           docker run -d \
-          -p 443:443 \
-          --name reactchat-front \
-          -v $(pwd)/ssl:/etc/letsencrypt/live/reactchat.online \
-          kingheedo/reactchat-front:latest
+            -p 443:443 \
+            --name reactchat-front \
+            -v /etc/letsencrypt/live/reactchat.online:/etc/letsencrypt/live/reactchat.online \
+            kingheedo/reactchat-front:latest
 
-          # Nginx configuration update
+          # Nginx 설정 임시 중지
+          sudo systemctl stop nginx
+
+          # Certbot 실행
+          sudo certbot certonly --standalone --agree-tos --non-interactive -d reactchat.online -m dhkdgmleh@gmail.com
+
+          # Nginx 설정 업데이트
           sudo sed -i "s/listen 80 default_server;/listen 443 ssl http2;/g" /etc/nginx/nginx.conf
           sudo sed -i "s/server_name _;/server_name reactchat.online;/g" /etc/nginx/nginx.conf
           sudo sed -i "/server_name reactchat.online;/a \\\tssl_certificate /etc/letsencrypt/live/reactchat.online/fullchain.pem;" /etc/nginx/nginx.conf
           sudo sed -i "/server_name reactchat.online;/a \\\tssl_certificate_key /etc/letsencrypt/live/reactchat.online/privkey.pem;" /etc/nginx/nginx.conf
 
-          # Restart Nginx to apply changes
-          sudo systemctl restart nginx
-
+          # Nginx 재시작
+          sudo systemctl start nginx
