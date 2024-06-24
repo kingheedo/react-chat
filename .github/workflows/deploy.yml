@@ -18,10 +18,15 @@ jobs:
 
       - name: Log in to Docker Hub
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
-        
+
+      - name: Set up Nginx SSL certificates
+      run: |
+        cd front
+        echo "${{ secrets.FULLCHAIN_PEM }}" > /etc/nginx/ssl/fullchain.pem
+        echo "${{ secrets.PRIVKEY_PEM }}" > /etc/nginx/ssl/privkey.pem
+
       - name: Build and push Docker image
         run: |
-          cd front
           docker build -t kingheedo/reactchathttps:latest .
           docker push kingheedo/reactchathttps:latest
 
