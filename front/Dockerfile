@@ -13,12 +13,14 @@ RUN npm run build
 FROM nginx:alpine
 
 # Copy Nginx configuration
-COPY ../nginx/nginx.conf /etc/nginx/nginx.conf
+COPY nginx/nginx.conf /etc/nginx/nginx.conf
 
 # Copy built React app to Nginx public directory
 COPY --from=build /src/build /usr/share/nginx/html
 
-# Copy SSL certificates from secrets (these lines will be used in the workflow)
+# Copy SSL certificates
+COPY nginx/ssl/fullchain.pem /etc/letsencrypt/live/reactchat.online/fullchain.pem
+COPY nginx/ssl/privkey.pem /etc/letsencrypt/live/reactchat.online/privkey.pem
 
 EXPOSE 80
 EXPOSE 443
