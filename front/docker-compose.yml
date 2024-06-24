@@ -5,13 +5,13 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: kingheedo/reactchat:latest # 이미지 이름을 지정합니다
-    container_name: reactchat # 컨테이너 이름을 지정합니다
+    # image: kingheedo/reactchat:latest # 이미지 이름을 지정합니다
+    # container_name: reactchat # 컨테이너 이름을 지정합니다
     ports:
       - '80:80'
       - '443:443'
     restart: always
-    volumes:
-      - ./nginx/ssl:/etc/nginx/ssl
-      - /etc/letsencrypt:/etc/letsencrypt # Add this line to share the Let's Encrypt certificates
-    command: ['sh', '-c', "crond -l 2 && nginx -g 'daemon off;'"]
+    # volumes:
+    # - ./nginx/ssl:/etc/nginx/ssl
+    # - /etc/letsencrypt:/etc/letsencrypt # Add this line to share the Let's Encrypt certificates
+    # command: ['sh', '-c', "crond -l 2 && nginx -g 'daemon off;'"]

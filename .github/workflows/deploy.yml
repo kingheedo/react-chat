@@ -19,17 +19,21 @@ jobs:
       - name: Log in to Docker Hub
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
-      - name: Set up Nginx SSL certificates
+      - name: Build and push frontend Docker image
         run: |
-          cd front
-          mkdir -p /etc/nginx/ssl
-          echo "${{ secrets.FULLCHAIN_PEM }}" > /etc/nginx/ssl/fullchain.pem
-          echo "${{ secrets.PRIVKEY_PEM }}" > /etc/nginx/ssl/privkey.pem
+          docker build -t kingheedo/reactchat-front:latest ./front
+          docker push kingheedo/reactchat-front:latest
 
-      - name: Build and push Docker image
-        run: |
-          docker build -t kingheedo/reactchathttps:latest .
-          docker push kingheedo/reactchathttps:latest
+      #- name: Build and push backend Docker image
+      #  run: |
+      #  docker build -t YOUR_DOCKERHUB_USERNAME/my-react-backend:latest ./back
+      #  docker push YOUR_DOCKERHUB_USERNAME/my-react-backend:latest
+
+      - name: Install Certbot and obtain SSL certificate
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y certbot python3-certbot-nginx
+        sudo certbot --nginx --agree-tos --redirect --non-interactive -d reactchat.online -m dhkdgmleh@gmail.com
 
       - name: SSH to EC2 and deploy
         uses: appleboy/ssh-action@v0.1.3
@@ -38,10 +42,23 @@ jobs:
           username: ec2-user
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            cd react-chat
-            git pull origin main
-            cd front
-            docker pull kingheedo/reactchathttps:latest
-            docker stop reactchathttps || true
-            docker rm reactchathttps || true
-            docker run -d -p 80:80 --name reactchathttps kingheedo/reactchathttps:latest
+            # Stop and remove existing containers
+            docker pull kingheedo/reactchat-front:latest
+            docker stop reactchat-front || true
+            docker rm reactchat-front || true
+
+            docker run -d \
+            -p 443:443 \
+            --name reactchat-front \
+            -v $(pwd)/ssl:/etc/letsencrypt/live/reactchat.online \
+            kingheedo/reactchat-front:latest
+
+            # Nginx configuration update
+            sudo sed -i "s/listen 80 default_server;/listen 443 ssl http2;/g" /etc/nginx/nginx.conf
+            sudo sed -i "s/server_name _;/server_name reactchat.online;/g" /etc/nginx/nginx.conf
+            sudo sed -i "/server_name reactchat.online;/a \\\tssl_certificate /etc/letsencrypt/live/reactchat.online/fullchain.pem;" /etc/nginx/nginx.conf
+            sudo sed -i "/server_name reactchat.online;/a \\\tssl_certificate_key /etc/letsencrypt/live/reactchat.online/privkey.pem;" /etc/nginx/nginx.conf
+            
+            # Restart Nginx to apply changes
+            sudo systemctl restart nginx
+
