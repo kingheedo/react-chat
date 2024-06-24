@@ -22,6 +22,7 @@ jobs:
       - name: Set up Nginx SSL certificates
         run: |
           cd front
+          mkdir -p /etc/nginx/ssl
           echo "${{ secrets.FULLCHAIN_PEM }}" > /etc/nginx/ssl/fullchain.pem
           echo "${{ secrets.PRIVKEY_PEM }}" > /etc/nginx/ssl/privkey.pem
 
