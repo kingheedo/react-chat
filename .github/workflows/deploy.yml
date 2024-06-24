@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -44,15 +44,14 @@ jobs:
         docker build -t kingheedo/reactchat-front:latest .
         docker push kingheedo/reactchat-front:latest
 
-     - name: Deploy to server
+    - name: Deploy to server
       uses: appleboy/ssh-action@v0.1.2
       with:
         host: ${{ secrets.REMOTE_HOST }}
         username: ${{ secrets.REMOTE_USER }}
-        key: ${{ secrets.SSH_PRIVATE_KEY }}
-        port: 22
+        key: ${{ secrets.EC2_SSH_KEY }}
         script: |
           cd ${{ secrets.REMOTE_TARGET }}
           docker-compose down
           docker-compose up -d
-        debug: true
+          debug: true
