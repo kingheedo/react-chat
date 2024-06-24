@@ -81,7 +81,18 @@ jobs:
             sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
             sudo chmod +x /usr/local/bin/docker-compose
             sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
-            sudo /usr/local/bin/docker-compose --version
+            sudo docker-compose --version
+
+      - name: Ensure Docker is running
+        uses: appleboy/ssh-action@v0.1.7
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            sudo systemctl start docker
+            sudo systemctl enable docker
+            sudo systemctl status docker
 
       - name: SSH to EC2 and deploy
         uses: appleboy/ssh-action@v0.1.7
