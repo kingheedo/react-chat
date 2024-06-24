@@ -40,7 +40,7 @@ jobs:
           docker stop reactchat-front || true
           docker rm reactchat-front || true
           docker run -d \
-            -p 443:443 \
+            -p 80:80 \
             --name reactchat-front \
             kingheedo/reactchat-front:latest
 
@@ -48,7 +48,9 @@ jobs:
           sudo systemctl stop nginx
 
           # Certbot 실행
-          sudo certbot certonly --standalone --agree-tos --non-interactive -d reactchat.online -m dhkdgmleh@gmail.com
+            sudo apt-get update
+          sudo apt-get install -y certbot python3-certbot-nginx
+          sudo certbot --nginx --agree-tos --redirect --non-interactive -d reactchat.online -m dhkdgmleh@gmail.com
           
           # Nginx 설정 업데이트
           sudo sed -i "s/listen 80 default_server;/listen 443 ssl http2;/g" /etc/nginx/nginx.conf

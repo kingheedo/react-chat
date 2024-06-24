@@ -18,6 +18,6 @@ COPY nginx/nginx.conf /etc/nginx/nginx.conf
 # Copy built React app to Nginx public directory
 COPY --from=build /src/dist /usr/share/nginx/html
 
-EXPOSE 443
+EXPOSE 80
 
 CMD ["nginx", "-g", "daemon off;"]
