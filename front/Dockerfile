@@ -1,28 +1,28 @@
 # Stage 1: Build React App
 FROM node:20-alpine as build
 
-WORKDIR /app
+WORKDIR /src
 
 COPY package.json package-lock.json ./
-
 RUN npm ci
 
 COPY . .
-
-WORKDIR /app/front
-
 RUN npm run build
 
-# Stage 2: Serve React App with Nginx
+# Stage 2: Serve React App with Nginx and Certbot
 FROM nginx:alpine
 
-RUN rm -rf /usr/share/nginx/html/*
+# Copy Nginx configuration
+COPY ../nginx/nginx.conf /etc/nginx/nginx.conf
 
-COPY --from=build /app/front/build /usr/share/nginx/html
+# Copy built React app to Nginx public directory
+COPY --from=build /src/build /usr/share/nginx/html
 
-# Copy nginx configuration file from the current directory (where Dockerfile is located)
-COPY nginx.conf /etc/nginx/nginx.conf
+# Copy SSL certificates from secrets (these lines will be used in the workflow)
+COPY ../nginx/ssl/fullchain.pem /etc/letsencrypt/live/reactchat.online/fullchain.pem
+COPY ../nginx/ssl/privkey.pem /etc/letsencrypt/live/reactchat.online/privkey.pem
 
+EXPOSE 80
 EXPOSE 443
 
 CMD ["nginx", "-g", "daemon off;"]

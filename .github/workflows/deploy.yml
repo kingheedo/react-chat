@@ -24,10 +24,10 @@ jobs:
         docker build -t kingheedo/reactchat-front:latest ./front
         docker push kingheedo/reactchat-front:latest
 
-    #- name: Build and push backend Docker image
-    #  run: |
-    #  docker build -t YOUR_DOCKERHUB_USERNAME/my-react-backend:latest ./back
-    #  docker push YOUR_DOCKERHUB_USERNAME/my-react-backend:latest
+      #- name: Build and push backend Docker image
+      #  run: |
+      #  docker build -t YOUR_DOCKERHUB_USERNAME/my-react-backend:latest ./back
+      #  docker push YOUR_DOCKERHUB_USERNAME/my-react-backend:latest
 
     - name: Install Certbot and obtain SSL certificate
       run: |
