@@ -155,6 +155,16 @@ jobs:
             sudo docker-compose down
             sudo certbot --nginx -d reactchat.online -d www.reactchat.online --non-interactive --agree-tos --email dhkdgmleh@gmail.com
       
+      - name: Stop Nginx
+        uses:       
+        with: 
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            cd /home/ubuntu/react-chat
+            sudo systemctl stop nginx
+
       - name: SSH to EC2 and deploy
         uses: appleboy/ssh-action@v0.1.7
         with:
@@ -163,7 +173,6 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             cd /home/ubuntu/react-chat
-            sudo systemctl stop nginx
             sudo docker-compose down
             sudo docker-compose up -d
 
