@@ -11,7 +11,7 @@ services:
       - certbot-etc:/etc/letsencrypt
       - certbot-var:/var/lib/letsencrypt
     environment:
-      - CERTBOT_EMAIL=your-email@example.com
+      - CERTBOT_EMAIL=dhkdgmleh@gmail.com
       - CERTBOT_DOMAIN1=reactchat.online
       - CERTBOT_DOMAIN2=www.reactchat.online
       - CERTBOT_DOMAIN3=api.reactchat.online
