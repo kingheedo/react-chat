@@ -21,12 +21,13 @@ COPY --from=build /src/dist /usr/share/nginx/html
 # Copy custom Nginx configuration file
 COPY nginx/nginx.conf /etc/nginx/nginx.conf
 
+# Copy the script to renew certificates
+COPY renew_certificates.sh /usr/local/bin/renew_certificates.sh
+RUN chmod +x /usr/local/bin/renew_certificates.sh
+
 # Expose port 80 and 443
 EXPOSE 80
 EXPOSE 443
 
-# Copy the script to renew certificates
-COPY renew_certificates.sh /usr/local/bin/renew_certificates.sh
-RUN chmod +x /usr/local/bin/renew_certificates.sh
 
 CMD ["sh", "-c", "nginx -g 'daemon off;' & /usr/local/bin/renew_certificates.sh"]

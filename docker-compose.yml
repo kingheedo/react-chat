@@ -6,8 +6,8 @@ services:
       context: ./front
     image: kingheedo/reactchat-front:latest
     ports:
+      - "80:80"
       - "443:443"
     volumes:
-      - ./front:/usr/share/nginx/html
       - /etc/letsencrypt:/etc/letsencrypt
       - /var/lib/letsencrypt:/var/lib/letsencrypt
