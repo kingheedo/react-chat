@@ -16,4 +16,8 @@ services:
       - CERTBOT_DOMAIN2=www.reactchat.online
       - CERTBOT_DOMAIN3=api.reactchat.online
     command: >
-      sh -c "nginx -g 'daemon off;' & while :; do certbot renew --nginx --non-interactive --agree-tos --email $CERTBOT_EMAIL --domains $CERTBOT_DOMAIN1,$CERTBOT_DOMAIN2,$CERTBOT_DOMAIN
+      sh -c "nginx -g 'daemon off;' & while :; do certbot renew --nginx --non-interactive --agree-tos --email $CERTBOT_EMAIL --domains $CERTBOT_DOMAIN1,$CERTBOT_DOMAIN2,$CERTBOT_DOMAIN3; sleep 12h; done"
+
+volumes:
+  certbot-etc:
+  certbot-var:
