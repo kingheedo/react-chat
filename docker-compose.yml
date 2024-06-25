@@ -8,10 +8,6 @@ services:
     ports:
       - "80:80"
       - "443:443"
-    environment:
-      - CERTBOT_EMAIL=dhkdgmleh@gmail.com
-      - CERTBOT_DOMAIN1=reactchat.online
-      - CERTBOT_DOMAIN2=www.reactchat.online
     volumes:
       - ./front:/usr/share/nginx/html
       - /etc/letsencrypt:/etc/letsencrypt

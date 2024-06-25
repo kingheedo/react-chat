@@ -25,8 +25,7 @@ jobs:
       - name: Build and push front Docker image
         run: |
           docker buildx build --no-cache --push --tag ${{ secrets.DOCKER_USERNAME }}/reactchat-front:latest ./front
-          # docker buildx build --no-cache --push --tag ${{ secrets.DOCKER_USERNAME }}/reactchat-back:latest ./back
-  
+
   deploy:
     needs: build
     runs-on: ubuntu-latest
@@ -177,12 +176,3 @@ jobs:
             cd /home/ubuntu/react-chat
             sudo docker-compose down
             sudo docker-compose up -d
-
-      - name: Renew SSL certificates
-        uses: appleboy/ssh-action@v0.1.7
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER }}
-          key: ${{ secrets.EC2_SSH_KEY }}
-          script: |
-            sudo docker run --rm -v /etc/letsencrypt:/etc/letsencrypt -v /var/lib/letsencrypt:/var/lib/letsencrypt certbot/certbot renew --non-interactive --nginx --agree-tos --email dhkdgmleh@gmail.com
