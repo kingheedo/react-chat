@@ -151,6 +151,7 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
+            sudo docker-compose down
             sudo certbot --nginx -d reactchat.online -d www.reactchat.online --non-interactive --agree-tos --email dhkdgmleh@gmail.com
       
       - name: SSH to EC2 and deploy
