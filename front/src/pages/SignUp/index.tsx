@@ -59,7 +59,7 @@ const SignUp = () => {
   return (
     <Section className="signup">
       <header>
-        <Link to="/">React-Chat</Link>
+        <Link to="/">Chat</Link>
       </header>
       <main>
         <Form
