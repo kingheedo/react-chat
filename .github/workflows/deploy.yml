@@ -100,15 +100,15 @@ jobs:
             sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
             sudo docker-compose --version
 
-      - name: Install Nginx on EC2
+      - name: Install Nginx and Certbot on EC2
         uses: appleboy/ssh-action@v0.1.7
-        with: 
+        with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             sudo apt-get update
-            sudo apt-get install -y nginx
+            sudo apt-get install -y nginx certbot python3-certbot-nginx
 
       - name: Ensure Docker is running
         uses: appleboy/ssh-action@v0.1.7
