@@ -162,7 +162,7 @@ jobs:
               --email dhkdgmleh@gmail.com \
               -d reactchat.online \
               -d www.reactchat.online \
-              -d api.reactchat.online
+              #-d api.reactchat.online
 
       - name: SSH to EC2 and deploy
         uses: appleboy/ssh-action@v0.1.7
