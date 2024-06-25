@@ -4,20 +4,15 @@ services:
   front:
     build:
       context: ./front
+    image: kingheedo/reactchat-front:latest
     ports:
-      - "3090:80"
+      - "80:80"
       - "443:443"
-    volumes:
-      - certbot-etc:/etc/letsencrypt
-      - certbot-var:/var/lib/letsencrypt
     environment:
       - CERTBOT_EMAIL=dhkdgmleh@gmail.com
       - CERTBOT_DOMAIN1=reactchat.online
       - CERTBOT_DOMAIN2=www.reactchat.online
-      #- CERTBOT_DOMAIN3=api.reactchat.online
-    command: >
-      sh -c "nginx -g 'daemon off;' & while :; do certbot renew --nginx --non-interactive --agree-tos --email $CERTBOT_EMAIL --domains $CERTBOT_DOMAIN1,$CERTBOT_DOMAIN2; sleep 12h; done"
-
-volumes:
-  certbot-etc:
-  certbot-var:
+    volumes:
+      - ./front:/usr/share/nginx/html
+      - /etc/letsencrypt:/etc/letsencrypt
+      - /var/lib/letsencrypt:/var/lib/letsencrypt

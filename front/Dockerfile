@@ -12,8 +12,8 @@ RUN npm run build
 # Stage 2: Serve React App with Nginx and Certbot
 FROM nginx:alpine
 
-# Install certbot
-RUN apk add --no-cache certbot certbot-nginx
+# Install certbot and other necessary packages
+RUN apk add --no-cache certbot certbot-nginx bash
 
 # Copy built React app to Nginx public directory
 COPY --from=build /src/dist /usr/share/nginx/html
@@ -25,4 +25,8 @@ COPY nginx/nginx.conf /etc/nginx/nginx.conf
 EXPOSE 80
 EXPOSE 443
 
-CMD ["sh", "-c", "nginx -g 'daemon off;' & while :; do certbot renew --nginx --non-interactive; sleep 12h; done"]
+# Copy the script to renew certificates
+COPY renew_certificates.sh /usr/local/bin/renew_certificates.sh
+RUN chmod +x /usr/local/bin/renew_certificates.sh
+
+CMD ["sh", "-c", "nginx -g 'daemon off;' & /usr/local/bin/renew_certificates.sh"]
