@@ -19,7 +19,7 @@ RUN apk add --no-cache certbot certbot-nginx
 COPY --from=build /src/dist /usr/share/nginx/html
 
 # Copy custom Nginx configuration file
-COPY nginx/nginx.conf /etc/nginx/conf.d/default.conf
+COPY nginx/nginx.conf /etc/nginx/nginx.conf
 
 # Expose port 80 and 443
 EXPOSE 80
