@@ -152,17 +152,18 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
+            sudo docker-compose down
+            sudo docker-compose up -d
             sudo docker run --rm \
               -v /etc/letsencrypt:/etc/letsencrypt \
               -v /var/lib/letsencrypt:/var/lib/letsencrypt \
               certbot/certbot certonly \
-              --standalone \
+              --webroot -w /usr/share/nginx/html \
               --non-interactive \
               --agree-tos \
               --email dhkdgmleh@gmail.com \
               -d reactchat.online \
-              -d www.reactchat.online \
-              #-d api.reactchat.online
+              -d www.reactchat.online
 
       - name: SSH to EC2 and deploy
         uses: appleboy/ssh-action@v0.1.7
@@ -182,5 +183,4 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            sudo docker-compose run --rm front sh -c "nginx -g 'daemon off;' & while :; do certbot renew --nginx --non-interactive --agree-tos --email dhkdgmleh@gmail.com; sleep 12h; done"
-
+            sudo docker run --rm -v /etc/letsencrypt:/etc/letsencrypt -v /var/lib/letsencrypt:/var/lib/letsencrypt certbot/certbot renew --non-interactive --nginx --agree-tos --email dhkdgmleh@gmail.com
