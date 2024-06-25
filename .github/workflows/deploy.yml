@@ -24,8 +24,8 @@ jobs:
 
     - name: Build and push front Docker image
       run: |
-        docker buildx build --push --tag ${{ secrets.DOCKER_USERNAME }}/reactchat-front:latest ./front
-        # docker buildx build --push --tag ${{ secrets.DOCKER_USERNAME }}/reactchat-back:latest ./back
+        docker buildx build --no-cache --push --tag ${{ secrets.DOCKER_USERNAME }}/reactchat-front:latest ./front
+        # docker buildx build --no-cache --push --tag ${{ secrets.DOCKER_USERNAME }}/reactchat-back:latest ./back
 
   deploy:
     needs: build
