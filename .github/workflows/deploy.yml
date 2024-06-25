@@ -182,4 +182,5 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            sudo docker run --rm -v /etc/letsencrypt:/etc/letsencrypt -v /var/lib/letsencrypt:/var/lib/letsencrypt certbot/certbot renew --non-interactive --nginx --agree-tos --email dhkdgmleh@gmail.com
+            sudo docker-compose run --rm front sh -c "nginx -g 'daemon off;' & while :; do certbot renew --nginx --non-interactive --agree-tos --email dhkdgmleh@gmail.com; sleep 12h; done"
+
