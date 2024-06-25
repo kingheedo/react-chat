@@ -152,11 +152,13 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
+            cd /home/ubuntu/react-chat
             sudo docker-compose down
             sudo docker-compose up -d
             sudo docker run --rm \
               -v /etc/letsencrypt:/etc/letsencrypt \
               -v /var/lib/letsencrypt:/var/lib/letsencrypt \
+              -v /home/ubuntu/react-chat/front/.well-known:/usr/share/nginx/html/.well-known \
               certbot/certbot certonly \
               --webroot -w /usr/share/nginx/html \
               --non-interactive \
