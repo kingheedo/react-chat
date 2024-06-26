@@ -6,27 +6,7 @@ on:
       - main
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
-
-      - name: Log in to Docker Hub
-        uses: docker/login-action@v1
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-
-      - name: Build and push front Docker image
-        run: |
-          docker buildx build --no-cache --push --tag ${{ secrets.DOCKER_USERNAME }}/reactchat-front:latest ./front
-
-  deploy:
+  build-and-deploy:
     needs: build
     runs-on: ubuntu-latest
 
@@ -43,7 +23,7 @@ jobs:
           script: |
             sudo mkdir -p /home/ubuntu/react-chat-temp
             sudo chown ${{ secrets.EC2_USER }}:${{ secrets.EC2_USER }} /home/ubuntu/react-chat-temp
-
+      
       - name: Add SSH key
         run: |
           mkdir -p ~/.ssh
@@ -99,7 +79,7 @@ jobs:
             sudo chmod +x /usr/local/bin/docker-compose
             sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
             sudo docker-compose --version
-
+      
       - name: Install Nginx and Certbot on EC2
         uses: appleboy/ssh-action@v0.1.7
         with:
@@ -121,6 +101,29 @@ jobs:
             sudo systemctl enable docker
             sudo systemctl status docker
 
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and push front Docker image
+        run: |
+          docker buildx build --no-cache --push --tag ${{ secrets.DOCKER_USERNAME }}/reactchat-front:latest ./front
+
+      - name: Pull Docker images
+        uses: appleboy/ssh-action@v0.1.7
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            cd /home/ubuntu/react-chat
+            sudo docker-compose pull
+
       - name: Increase Swap Memory
         uses: appleboy/ssh-action@v0.1.7
         with:
@@ -134,26 +137,16 @@ jobs:
             sudo swapon /swapfile
             echo '/swapfile swap swap defaults 0 0' | sudo tee -a /etc/fstab
 
-      - name: Pull Docker images
-        uses: appleboy/ssh-action@v0.1.7
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER }}
-          key: ${{ secrets.EC2_SSH_KEY }}
-          script: |
-            cd /home/ubuntu/react-chat
-            sudo docker-compose pull
-
-      #- name: Obtain initial SSL certificates
-      #  uses: appleboy/ssh-action@v0.1.7
-      #  with:
-      #    host: ${{ secrets.EC2_HOST }}
-      #    username: ${{ secrets.EC2_USER }}
-      #    key: ${{ secrets.EC2_SSH_KEY }}
-      #    script: |
-      #      cd /home/ubuntu/react-chat
-      #      sudo docker-compose down
-      #      sudo certbot --nginx -d reactchat.online -d www.reactchat.online --non-interactive --agree-tos --email dhkdgmleh@gmail.com
+        # - name: Obtain initial SSL certificates
+        #  uses: appleboy/ssh-action@v0.1.7
+        #  with:
+        #    host: ${{ secrets.EC2_HOST }}
+        #    username: ${{ secrets.EC2_USER }}
+        #    key: ${{ secrets.EC2_SSH_KEY }}
+        #    script: |
+        #      cd /home/ubuntu/react-chat
+        #      sudo docker-compose down
+        #      sudo certbot --nginx -d reactchat.online -d www.reactchat.online --non-interactive --agree-tos --email dhkdgmleh@gmail.com
 
       - name: SSH to EC2 and deploy
         uses: appleboy/ssh-action@v0.1.7
