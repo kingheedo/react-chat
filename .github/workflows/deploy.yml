@@ -45,49 +45,49 @@ jobs:
             sudo cp -r /home/ubuntu/react-chat-temp/* /home/ubuntu/react-chat/
             sudo rm -rf /home/ubuntu/react-chat-temp
 
-      - name: Install Docker on EC2
-        uses: appleboy/ssh-action@v0.1.7
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER }}
-          key: ${{ secrets.EC2_SSH_KEY }}
-          script: |
-            sudo apt-get update
-            sudo apt-get install -y \
-              ca-certificates \
-              curl \
-              gnupg \
-              lsb-release
-            curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
-            echo \
-              "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
-              $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-            sudo apt-get update
-            sudo apt-get install -y docker-ce docker-ce-cli containerd.io
-            sudo systemctl start docker
-            sudo systemctl enable docker
+      # - name: Install Docker on EC2
+      #   uses: appleboy/ssh-action@v0.1.7
+      #   with:
+      #     host: ${{ secrets.EC2_HOST }}
+      #     username: ${{ secrets.EC2_USER }}
+      #     key: ${{ secrets.EC2_SSH_KEY }}
+      #     script: |
+      #       sudo apt-get update
+      #       sudo apt-get install -y \
+      #         ca-certificates \
+      #         curl \
+      #         gnupg \
+      #         lsb-release
+      #       curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+      #       echo \
+      #         "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
+      #         $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+      #       sudo apt-get update
+      #       sudo apt-get install -y docker-ce docker-ce-cli containerd.io
+      #       sudo systemctl start docker
+      #       sudo systemctl enable docker
 
-      - name: Install Docker Compose on EC2
-        uses: appleboy/ssh-action@v0.1.7
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER }}
-          key: ${{ secrets.EC2_SSH_KEY }}
-          script: |
-            sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-            sudo chmod +x /usr/local/bin/docker-compose
-            sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
-            sudo docker-compose --version
+      # - name: Install Docker Compose on EC2
+      #   uses: appleboy/ssh-action@v0.1.7
+      #   with:
+      #     host: ${{ secrets.EC2_HOST }}
+      #     username: ${{ secrets.EC2_USER }}
+      #     key: ${{ secrets.EC2_SSH_KEY }}
+      #     script: |
+      #       sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+      #       sudo chmod +x /usr/local/bin/docker-compose
+      #       sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
+      #       sudo docker-compose --version
       
-      - name: Install Nginx and Certbot on EC2
-        uses: appleboy/ssh-action@v0.1.7
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER }}
-          key: ${{ secrets.EC2_SSH_KEY }}
-          script: |
-            sudo apt-get update
-            sudo apt-get install -y nginx certbot python3-certbot-nginx
+      # - name: Install Nginx and Certbot on EC2
+      #   uses: appleboy/ssh-action@v0.1.7
+      #   with:
+      #     host: ${{ secrets.EC2_HOST }}
+      #     username: ${{ secrets.EC2_USER }}
+      #     key: ${{ secrets.EC2_SSH_KEY }}
+      #     script: |
+      #       sudo apt-get update
+      #       sudo apt-get install -y nginx certbot python3-certbot-nginx
 
       - name: Ensure Docker is running
         uses: appleboy/ssh-action@v0.1.7
@@ -123,18 +123,18 @@ jobs:
             cd /home/ubuntu/react-chat
             sudo docker-compose pull
 
-      - name: Increase Swap Memory
-        uses: appleboy/ssh-action@v0.1.7
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER }}
-          key: ${{ secrets.EC2_SSH_KEY }}
-          script: |
-            sudo fallocate -l 2G /swapfile
-            sudo chmod 600 /swapfile
-            sudo mkswap /swapfile
-            sudo swapon /swapfile
-            echo '/swapfile swap swap defaults 0 0' | sudo tee -a /etc/fstab
+      # - name: Increase Swap Memory
+      #   uses: appleboy/ssh-action@v0.1.7
+      #   with:
+      #     host: ${{ secrets.EC2_HOST }}
+      #     username: ${{ secrets.EC2_USER }}
+      #     key: ${{ secrets.EC2_SSH_KEY }}
+      #     script: |
+      #       sudo fallocate -l 2G /swapfile
+      #       sudo chmod 600 /swapfile
+      #       sudo mkswap /swapfile
+      #       sudo swapon /swapfile
+      #       echo '/swapfile swap swap defaults 0 0' | sudo tee -a /etc/fstab
 
         # - name: Obtain initial SSL certificates
         #  uses: appleboy/ssh-action@v0.1.7
@@ -159,11 +159,11 @@ jobs:
             sudo docker-compose down
             sudo docker-compose up -d
 
-      - name: Set up cron job for certificate renewal
-        uses: appleboy/ssh-action@v0.1.7
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER }}
-          key: ${{ secrets.EC2_SSH_KEY }}
-          script: |
-            echo "0 0 * * * /usr/bin/certbot renew --quiet && sudo systemctl reload nginx" | sudo tee -a /etc/crontab
+      #- name: Set up cron job for certificate renewal
+      #  uses: appleboy/ssh-action@v0.1.7
+      #  with:
+      #    host: ${{ secrets.EC2_HOST }}
+      #    username: ${{ secrets.EC2_USER }}
+      #    key: ${{ secrets.EC2_SSH_KEY }}
+      #    script: |
+      #      echo "0 0 * * * /usr/bin/certbot renew --quiet && sudo systemctl reload nginx" | sudo tee -a /etc/crontab
