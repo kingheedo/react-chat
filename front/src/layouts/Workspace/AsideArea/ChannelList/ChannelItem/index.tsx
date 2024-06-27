@@ -20,11 +20,11 @@ const ChannelItem = ({ workspaceUrl, channelName }: IChannelItemProps) => {
   const { unreadsDate, setUnreadsDate } = useUnreadsDateStore();
 
   const getUnreadsDate = useMemo(() => {
-    const targetidx = unreadsDate.findIndex(
+    const targetIdx = unreadsDate.findIndex(
       (unread) => unread[`${workspaceUrl}-${channelName}`]
     );
-    if (targetidx > -1) {
-      return Number(unreadsDate[targetidx][`${workspaceUrl}-${channelName}`]);
+    if (targetIdx > -1) {
+      return Number(unreadsDate[targetIdx][`${workspaceUrl}-${channelName}`]);
     } else {
       return 0;
     }

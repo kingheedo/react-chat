@@ -36,27 +36,9 @@ const Channel = () => {
   const { setUnreadsDate } = useUnreadsDateStore();
   const { sendChannelChat } = useSendChannelChat();
 
-  useEffect(() => {
-    socket?.on('message', (chat: IChat & { url: string }) =>
-      handleChat({
-        chat,
-        channelChats,
-        channelInfo,
-        mutateChannelChats,
-      })
-    );
-
-    return () => {
-      socket?.off('message', (chat: IChat & { url: string }) =>
-        handleChat({
-          chat,
-          channelChats,
-          channelInfo,
-          mutateChannelChats,
-        })
-      );
-    };
-  }, [socket, channelChats, handleChat]);
+  const handleUpdateCallBack = useCallback(async () => {
+    await handleUpdate(setSize);
+  }, [setSize]);
 
   const handleSubmitCallBack = useCallback(
     (content: string) => {
@@ -83,15 +65,33 @@ const Channel = () => {
   );
 
   useEffect(() => {
+    socket?.on('message', (chat: IChat & { url: string }) =>
+      handleChat({
+        chat,
+        channelChats,
+        channelInfo,
+        mutateChannelChats,
+      })
+    );
+
+    return () => {
+      socket?.off('message', (chat: IChat & { url: string }) =>
+        handleChat({
+          chat,
+          channelChats,
+          channelInfo,
+          mutateChannelChats,
+        })
+      );
+    };
+  }, [socket, channelChats, handleChat]);
+
+  useEffect(() => {
     setUnreadsDate(
       `${params.workspaceUrl}-${params.channelName}`,
       String(new Date().getTime())
     );
   }, [params.workspaceUrl, params.channelName]);
-
-  const handleUpdateCallBack = useCallback(async () => {
-    await handleUpdate(setSize);
-  }, [setSize]);
 
   return (
     <Section className="channel">

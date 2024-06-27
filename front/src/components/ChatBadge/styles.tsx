@@ -8,6 +8,7 @@ export const Badge = styled.span`
   font-size: 12px;
   font-weight: 700;
   border-radius: 16px;
+  width: 25px;
   height: 18px;
   padding: 0 9px;
   line-height: 18px;

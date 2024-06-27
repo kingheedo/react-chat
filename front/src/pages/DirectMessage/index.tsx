@@ -9,11 +9,13 @@ import useGetUser from '@hooks/useSWR/useGetUser';
 import { IDM } from '@typings/db';
 import useGetUserWorkspace from '@hooks/useSWR/useGetUserWorkspace';
 import useCurrentWorkSpace from '@hooks/useCurrentWorkSpace';
+import useUnreadsDateStore from '@store/UnreadsDateStore';
 
 const DirectMessage = () => {
   const params = useParams();
   const { user } = useGetUser();
   const { postSendDm } = useSendDm();
+  const { setUnreadsDate } = useUnreadsDateStore();
   const currentWorkspace = useCurrentWorkSpace();
   const { userWorkspace } = useGetUserWorkspace({
     workspaceUrl: params.workspaceUrl || '',
@@ -50,7 +52,6 @@ const DirectMessage = () => {
         },
       });
 
-      await socket?.emit('clientDm', returnedDm);
       let prevDms = dms as any;
       let newDms;
       newDms = [
@@ -78,6 +79,12 @@ const DirectMessage = () => {
         ],
       ];
       await mutateDms(newDms, false);
+
+      await socket?.emit('clientDm', returnedDm);
+      setUnreadsDate(
+        `${params.workspaceUrl}-${returnedDm.ReceiverId}`,
+        String(new Date().getTime())
+      );
       scrollbarRef.current?.scrollToBottom();
     } catch (err) {
       console.log(err);
@@ -123,6 +130,13 @@ const DirectMessage = () => {
       socket?.off('dm', handleListenDm);
     };
   }, [socket, dms, userWorkspace]);
+
+  useEffect(() => {
+    setUnreadsDate(
+      `${params.workspaceUrl}-${params.userId}`,
+      String(new Date().getTime())
+    );
+  }, [params]);
 
   return (
     <Section className="dm">

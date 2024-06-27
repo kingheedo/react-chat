@@ -8,8 +8,9 @@ import UserSquareIcon from '@components/UserSquareIcon';
 import useSocket from '@hooks/useSocket';
 import OnlineStatusCircle from '@components/OnlineStatusCircle';
 import { WorkspaceMemberContainer } from '../styles';
+import MemberItem from './MemberItem';
 
-type WithOnlineMember = GetWorkspaceMembers & { online: boolean };
+export type WithOnlineMember = GetWorkspaceMembers & { online: boolean };
 
 const WorkspaceMemberList = () => {
   const { workspaceMembers } = useGetWorkspaceMembers();
@@ -46,18 +47,7 @@ const WorkspaceMemberList = () => {
   return (
     <WorkspaceMemberContainer>
       {withOnlineMembers?.map((workspaceMember) => (
-        <SideListItem key={workspaceMember.id}>
-          <Link
-            to={`/workspace/${params.workspaceUrl}/dm/${workspaceMember.id}`}
-          >
-            {
-              <UserSquareIcon email={workspaceMember?.email}>
-                <OnlineStatusCircle active={workspaceMember.online} />
-              </UserSquareIcon>
-            }
-            {workspaceMember?.nickname}
-          </Link>
-        </SideListItem>
+        <MemberItem info={workspaceMember} />
       ))}
     </WorkspaceMemberContainer>
   );

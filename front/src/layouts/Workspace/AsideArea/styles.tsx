@@ -117,7 +117,7 @@ export const WorkspaceMemberContainer = styled.ul`
       height: 100%;
       gap: 8px;
 
-      span {
+      .square-icon {
         position: relative;
         width: 20px;
         height: 20px;
