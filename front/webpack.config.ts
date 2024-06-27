@@ -86,7 +86,7 @@ const config: Configuration = {
     new HtmlWebpackPlugin({
       template: './public/index.html', // 원본 HTML 템플릿 파일
       filename: 'index.html', // 생성될 HTML 파일명
-      inject: false, // 자바스크립트 파일을 자동으로 삽입할 위치 (head 또는 body)
+      inject: 'body', // 자바스크립트 파일을 자동으로 삽입할 위치 (head 또는 body)
       minify: !isDevelopment
         ? {
             removeComments: true,
@@ -111,8 +111,8 @@ const config: Configuration = {
   devServer: {
     historyApiFallback: true, // react router
     port: 3090,
-    devMiddleware: { publicPath: '/dist/' },
-    static: { directory: path.resolve(__dirname, 'public') },
+    // devMiddleware: { publicPath: '/dist/' },
+    // static: { directory: path.resolve(__dirname, 'public') },
   },
   performance: {
     hints: false,
