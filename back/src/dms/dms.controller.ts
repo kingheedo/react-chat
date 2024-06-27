@@ -61,4 +61,20 @@ export class DmsController {
   ) {
     return this.dmsService.postChat({ url, content, id, myId: user.id });
   }
+
+  @UseGuards(JwtAuthGuard)
+  @Get(':id/unread')
+  getUnreadsChatsCount(
+    @Param('url') url,
+    @Param('id', ParseIntPipe) senderId,
+    @User() user,
+    @Query('after', ParseIntPipe) after,
+  ) {
+    return this.dmsService.getUnreadsDms({
+      url,
+      senderId,
+      userId: user.id,
+      after,
+    });
+  }
 }

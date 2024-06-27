@@ -103,4 +103,37 @@ export class DmsService {
       await queryRunner.release();
     }
   }
+
+  async getUnreadsDms({
+    url,
+    userId,
+    senderId,
+    after,
+  }: {
+    url: string;
+    userId: number;
+    senderId: number;
+    after: number;
+  }) {
+    const unreadsDmsCount = await this.dmsRepository
+      .createQueryBuilder('dms')
+      .innerJoin('dms.Workspace', 'workspace', 'workspace.url = :url', {
+        url,
+      })
+      .innerJoinAndSelect(
+        'dms.Receiver',
+        'receiver',
+        'receiver.id = :receiverId',
+        {
+          receiverId: userId,
+        },
+      )
+      .innerJoinAndSelect('dms.Sender', 'sender', 'sender.id = :senderId', {
+        senderId,
+      })
+      .where('dms.createdAt > :after', { after: new Date(after) })
+      .getCount();
+
+    return unreadsDmsCount;
+  }
 }
