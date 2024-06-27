@@ -6,6 +6,7 @@ import Editor from './Editor';
 import ContentListWrap from './ContentList';
 import HeaderWrap from './HeaderWrap';
 import Scrollbars from 'react-custom-scrollbars-2';
+import { useParams } from 'react-router-dom';
 
 const LazyEditorComponent = lazy(
   () => import('@components/ChatArea/Editor/index')
@@ -65,10 +66,17 @@ const ChatArea = ({
   //   input: content,
   // });
   // };
+  const params = useParams<'channelName'>();
 
   return (
     <ChatWrap className="chat-wrap">
-      <HeaderWrap />
+      <HeaderWrap
+        content={
+          list.length > 0 && list[0][0] && 'Receiver' in list[0][0]
+            ? (list[0][0] as IDM).Receiver.nickname
+            : params.channelName || ''
+        }
+      />
       <ContentListWrap
         role={role}
         list={list}

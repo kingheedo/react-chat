@@ -2,12 +2,16 @@ import React from 'react';
 import { Header } from '../styles';
 import HashIcon from '@components/Icon/HashIcon';
 
-const HeaderWrap = () => {
+interface IHeaderWrapProps {
+  content: string;
+}
+
+const HeaderWrap = ({ content }: IHeaderWrapProps) => {
   return (
     <Header>
       <h2>
         <HashIcon />
-        랜덤
+        {content}
       </h2>
     </Header>
   );
