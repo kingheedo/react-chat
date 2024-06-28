@@ -26,7 +26,6 @@ COPY renew_certificates.sh /usr/local/bin/renew_certificates.sh
 RUN chmod +x /usr/local/bin/renew_certificates.sh
 
 # Expose port 80 and 443
-EXPOSE 80
 EXPOSE 443
 
 
