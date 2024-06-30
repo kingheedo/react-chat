@@ -141,6 +141,7 @@ jobs:
           script: |
             cd /home/ubuntu/react-chat
             sudo docker-compose pull front
+            sudo docker-compose pull nginx
 
       # - name: Increase Swap Memory
       #   uses: appleboy/ssh-action@v0.1.7
