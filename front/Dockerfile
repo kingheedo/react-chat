@@ -18,8 +18,8 @@ FROM nginx:latest
 # Copy built React app to Nginx public directory
 COPY --from=build /src/dist /usr/share/nginx/html
 
-# # Copy custom Nginx configuration file
-# COPY nginx/nginx.conf /etc/nginx/nginx.conf
+# Copy custom Nginx configuration file
+COPY nginx/nginx.conf /etc/nginx/nginx.conf
 
 # # Copy the script to renew certificates
 # COPY renew_certificates.sh /usr/local/bin/renew_certificates.sh
