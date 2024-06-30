@@ -27,7 +27,7 @@ COPY nginx/nginx.conf /etc/nginx/nginx.conf
 # RUN chmod +x /usr/local/bin/renew_certificates.sh
 
 # Expose port 443
-EXPOSE 3090
+EXPOSE 80
 
 
 CMD ["nginx", "-g", "daemon off;"]
