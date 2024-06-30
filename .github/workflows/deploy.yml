@@ -127,7 +127,9 @@ jobs:
       - name: Build and push front Docker image
         if: steps.changes-front.outputs.changed != 'no'
         run: |
-          docker buildx build --no-cache --push --tag ${{ secrets.DOCKER_USERNAME }}/reactchat-ec2:latest ./front
+          # docker buildx build --no-cache --push --tag ${{ secrets.DOCKER_USERNAME }}/reactchat-front:latest ./front
+          docker-compose -f ./docker-compose.yml build front
+          docker-compose -f ./docker-compose.yml push front
 
       - name: Pull Docker images
         if: steps.changes-front.outputs.changed != 'no'
@@ -138,7 +140,7 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             cd /home/ubuntu/react-chat
-            sudo docker-compose pull
+            sudo docker-compose pull front
 
       # - name: Increase Swap Memory
       #   uses: appleboy/ssh-action@v0.1.7
