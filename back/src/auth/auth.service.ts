@@ -1,7 +1,7 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, Repository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
-import bcrypt from 'bcrypt';
+import bcryptjs from 'bcryptjs';
 import { Users } from '@entities/Users';
 import { JwtService } from '@nestjs/jwt';
 
@@ -20,7 +20,7 @@ export class AuthService {
       },
     });
     if (user) {
-      const isMatch = bcrypt.compare(password, user.password);
+      const isMatch = bcryptjs.compare(password, user.password);
       if (isMatch) {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { password, ...result } = user;
@@ -77,7 +77,7 @@ export class AuthService {
         .execute();
 
       await queryRunner.commitTransaction();
-      return null;
+      return '로그아웃 완료';
     } catch (error) {
       queryRunner.rollbackTransaction();
     } finally {
@@ -88,9 +88,10 @@ export class AuthService {
   async login(user: Pick<Users, 'id' | 'email'>) {
     // 1
     const payload = { id: user.id, email: user.email };
+    console.log('login, payload', payload);
 
     const accessToken = await this.jwtService.sign(payload, {
-      expiresIn: '10s',
+      expiresIn: '30s',
     });
     const refreshToken = await this.jwtService.sign(payload, {
       expiresIn: '1d',
@@ -131,7 +132,7 @@ export class AuthService {
     const payload = {
       id: user.id,
       email: user.email,
-      refreshToken: user.refreshtoken,
+      // refreshToken: user.refreshtoken,
     };
     const accessToken = this.jwtService.sign(payload, { expiresIn: '10s' }); //payload와 생성일, 만료일이 strategy의 payload로 들어감
     return {

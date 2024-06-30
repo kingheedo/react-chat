@@ -1,0 +1,56 @@
+# docker-compose.yml
+
+services:
+  mysql:
+    image: mysql:8.4.0
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_DATABASE}
+    ports:
+      - '3307:3306'
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  back:
+    build: ./back
+    ports:
+      - '3095:3095'
+    environment:
+      DB_HOST: ${DB_HOST}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_DATABASE: ${DB_DATABASE}
+      CLIENT_DEV_PORT: ${CLIENT_DEV_PORT}
+      CLIENT_PROD_PORT: ${CLIENT_PROD_PORT}
+      COOKIE_SECRET: ${COOKIE_SECRET}
+      JWT_SECERT: ${JWT_SECERT}
+      PORT: ${PORT}
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+      AWS_REGION: ${AWS_REGION}
+      AWS_BUCKET_NAME: ${AWS_BUCKET_NAME}
+    depends_on:
+      - mysql
+
+  front:
+    build: ./front
+    image: kingheedo/reactchat-front:latest
+    ports:
+      - '3090:443'
+
+  nginx:
+    image: nginx:latest
+    ports:
+      - '443:443'
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - /etc/letsencrypt:/etc/letsencrypt
+      - /var/lib/letsencrypt:/var/lib/letsencrypt
+    depends_on:
+      - front
+      - back
+
+volumes:
+  mysql_data:
+    driver: local # 볼륨 드라이버 설정

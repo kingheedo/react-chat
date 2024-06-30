@@ -18,9 +18,6 @@ RUN apk add --no-cache certbot certbot-nginx bash
 # Copy built React app to Nginx public directory
 COPY --from=build /src/dist /usr/share/nginx/html
 
-# Copy custom Nginx configuration file
-COPY nginx/nginx.conf /etc/nginx/nginx.conf
-
 # Copy the script to renew certificates
 COPY renew_certificates.sh /usr/local/bin/renew_certificates.sh
 # 갱신 스크립트에 권한부여 이후에 스크립트를 직접 실행가능 or cron job에서 실행

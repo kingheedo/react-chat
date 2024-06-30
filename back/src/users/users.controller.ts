@@ -41,10 +41,7 @@ export class UsersController {
   @UseGuards(JwtAuthGuard)
   @Get()
   async findUser(@User() user: Users) {
-    console.log('user다', user);
-
     const userInfo = await this.usersService.findUser(user);
-    console.log('userInfo', userInfo);
     return userInfo;
   }
 
@@ -63,7 +60,12 @@ export class UsersController {
   @UseGuards(LocalAuthGuard)
   // @UseGuards(NotLoggedInGuard)
   @Post('login')
-  async logIn(@User() user: Pick<Users, 'id' | 'email'>) {
+  async logIn(
+    @Body('email') email: string,
+    @Body('password') password: string,
+  ) {
+    const user = await this.authService.validateUser(email, password);
+
     return this.authService.login(user);
   }
 

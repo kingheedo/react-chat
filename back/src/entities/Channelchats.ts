@@ -9,7 +9,7 @@ import {
 import { Channels } from './Channels';
 import { Users } from './Users';
 
-@Entity('channelchats', { schema: 'react-chat-test' })
+@Entity('channelchats', { schema: 'reactchat' })
 export class Channelchats {
   @ApiProperty({
     example: 1,

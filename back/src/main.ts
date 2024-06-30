@@ -18,8 +18,8 @@ async function bootstrap() {
   app.enableCors({
     origin:
       process.env.NODE_ENV !== 'production'
-        ? 'http://localhost:3090'
-        : 'http://localhost:3090',
+        ? process.env.CLIENT_DEV_URL
+        : process.env.CLIENT_PROD_URL,
     credentials: true,
   });
   // app.use(cookieParser());
@@ -47,6 +47,7 @@ async function bootstrap() {
   SwaggerModule.setup('api', app, document);
   await app.listen(port);
   console.log(`listening on port ${port}`);
+
   if (module.hot) {
     module.hot.accept();
     module.hot.dispose(() => app.close());

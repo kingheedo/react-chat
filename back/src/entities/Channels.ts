@@ -11,7 +11,7 @@ import { Workspaces } from './Workspaces';
 import { Channelchats } from './Channelchats';
 import { Channelmembers } from './Channelmembers';
 
-@Entity('channels', { schema: 'react-chat-test' })
+@Entity('channels', { schema: 'reactchat' })
 export class Channels {
   @ApiProperty({
     example: 1,

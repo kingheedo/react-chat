@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, Repository } from 'typeorm';
-import bcrypt from 'bcrypt';
+import bcryptjs from 'bcryptjs';
 import { Workspacemembers } from '@entities/Workspacemembers';
 import { Channelmembers } from '@entities/Channelmembers';
 
@@ -57,7 +57,7 @@ export class UsersService {
     if (exUser) {
       throw new UnauthorizedException('이미 존재하는 사용자입니다');
     }
-    const hashedPassword = await bcrypt.hash(password, 12);
+    const hashedPassword = await bcryptjs.hash(password, 12);
     try {
       const user = await queryRunner.manager.getRepository(Users).save({
         email,

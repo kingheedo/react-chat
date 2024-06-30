@@ -9,7 +9,7 @@ import {
 import { Users } from './Users';
 import { Channels } from './Channels';
 
-@Entity('channelmembers', { schema: 'react-chat-test' })
+@Entity('channelmembers', { schema: 'reactchat' })
 export class Channelmembers {
   @PrimaryGeneratedColumn({ type: 'int', name: 'id' })
   id: number;

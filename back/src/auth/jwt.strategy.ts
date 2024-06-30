@@ -22,10 +22,8 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
+  /** jwt전략을 거쳐서 validate가 실행 */
   async validate(req: Request, payload: IPayload) {
-    // 2
-    //req.user로 들어갈 값이 결정되는 구간
-    // if (Date.now() < payload.exp * 1000) {
     if (payload.email && payload.id)
       return {
         id: payload.id,

@@ -9,7 +9,7 @@ import {
 import { Workspaces } from './Workspaces';
 import { Users } from './Users';
 
-@Entity('dms', { schema: 'react-chat-test' })
+@Entity('dms', { schema: 'reactchat' })
 export class Dms {
   @ApiProperty({
     example: 1,
