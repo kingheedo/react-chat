@@ -17,6 +17,11 @@ const config: Configuration = {
   name: 'react-chat',
   mode: isDevelopment ? 'development' : 'production',
   devtool: !isDevelopment ? 'hidden-source-map' : 'eval',
+  optimization: {
+    usedExports: true, //사용되는 모듈만 사용
+    minimize: true, //번들 최소화
+    concatenateModules: true, //모듈을 연결하여 함수호출을 줄임
+  },
   resolve: {
     extensions: ['.js', '.jsx', '.ts', '.tsx', '.json'],
     alias: {
@@ -116,8 +121,8 @@ const config: Configuration = {
   },
   performance: {
     hints: false,
-    maxEntrypointSize: 512000,
-    maxAssetSize: 512000,
+    // maxEntrypointSize: 512000,
+    // maxAssetSize: 512000,
   },
 };
 
@@ -130,7 +135,7 @@ if (isDevelopment && config.plugins) {
 }
 if (!isDevelopment && config.plugins) {
   config.plugins.push(
-    new BundleAnalyzerPlugin({ analyzerMode: 'static', openAnalyzer: false })
+    new BundleAnalyzerPlugin({ analyzerMode: 'static', openAnalyzer: true })
   );
 }
 

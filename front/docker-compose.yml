@@ -1,0 +1,16 @@
+# docker-compose.yml
+
+services:
+  front:
+    build:
+      context: .
+    image: kingheedo/reactchat-front:latest
+    restart: always
+    ports:
+      - '443:443'
+    environment:
+      - SERVER_DEV_URL: ${SERVER_DEV_URL}
+      - SERVER_PROD_URL: ${SERVER_PROD_URL}
+    volumes:
+      - /etc/letsencrypt:/etc/letsencrypt
+      - /var/lib/letsencrypt:/var/lib/letsencrypt

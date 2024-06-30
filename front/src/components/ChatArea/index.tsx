@@ -1,8 +1,6 @@
-import React, { RefObject, lazy } from 'react';
+import React, { RefObject, lazy, useMemo } from 'react';
 import { ChatWrap } from './styles';
-import 'react-quill/dist/quill.snow.css';
 import { IChat, IDM } from '@typings/db';
-import Editor from './Editor';
 import ContentListWrap from './ContentList';
 import HeaderWrap from './HeaderWrap';
 import Scrollbars from 'react-custom-scrollbars-2';
@@ -68,15 +66,22 @@ const ChatArea = ({
   // };
   const params = useParams<'channelName'>();
 
+  /** 채팅 헤더 내용
+   *
+   * 1. 채널이면 채널명
+   * 2. DM이면 Receiver의 닉네임
+   */
+  const headerContent = useMemo(() => {
+    if (list.length > 0 && list[0][0] && 'Receiver' in list[0][0]) {
+      return (list[0][0] as IDM).Receiver.nickname;
+    } else {
+      return params.channelName || '';
+    }
+  }, [list, params.channelName]);
+
   return (
     <ChatWrap className="chat-wrap">
-      <HeaderWrap
-        content={
-          list.length > 0 && list[0][0] && 'Receiver' in list[0][0]
-            ? (list[0][0] as IDM).Receiver.nickname
-            : params.channelName || ''
-        }
-      />
+      <HeaderWrap content={headerContent} />
       <ContentListWrap
         role={role}
         list={list}

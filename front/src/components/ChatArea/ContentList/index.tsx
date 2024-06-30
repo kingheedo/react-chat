@@ -45,6 +45,115 @@ const ContentListWrap = ({
     return classifiedList(list.flat().reverse());
   }, [list]);
 
+  const ChatContents = (role: Role, list: [string, (IDM | IChat)[]][]) => {
+    const handleContent = (content: string) => {
+      const imgRegex = /\<img\s[^>]*>/gi;
+      const stringWithoutImg = content.replaceAll(imgRegex, '');
+      const imgTags = content.match(imgRegex) as string[];
+      const imgSrces = imgTags?.map((item) => {
+        const newImgSrc = item.match(/https[^"]*/gi);
+        return (newImgSrc && newImgSrc[0]) || '';
+      });
+      return (
+        <>
+          <div
+            className="chat-text"
+            dangerouslySetInnerHTML={{
+              __html: DOMPurify.sanitize(stringWithoutImg),
+            }}
+          />
+          {Array.isArray(imgTags) && imgTags.length > 0 && (
+            <div className="chat-imgs">
+              <div className="grid-cotainer">
+                <PhotoViewer imgSrces={imgSrces} />
+              </div>
+            </div>
+          )}
+        </>
+      );
+    };
+
+    /** 채팅이 DM or 채널 여부 확인*/
+    const isIDM = (chat: IDM | IChat): chat is IDM => {
+      return (chat as IDM).Sender !== undefined;
+    };
+
+    return list.map((value, index: number) => (
+      <div key={index} className="chat-content">
+        <span className="date">{value[0]}</span>
+        <em className="date-line" />
+        {value[1].map((chat: IDM | IChat) => (
+          <ChatItem
+            key={chat.id + chat.createdAt.toString()}
+            className="chat-item"
+          >
+            <UserSquareIcon
+              email={isIDM(chat) ? chat.Sender.email : chat.User.email}
+            />
+            <TextWrap>
+              <div className="chat-user">
+                <strong>
+                  {isIDM(chat) ? chat.Sender.nickname : chat.User.nickname}
+                </strong>
+                <em>{format(chat.createdAt, 'aa HH:MM', { locale: ko })}</em>
+              </div>
+              {handleContent(chat.content)}
+            </TextWrap>
+          </ChatItem>
+        ))}
+      </div>
+    ));
+
+    // switch (role) {
+    //   case Role.CHAT:
+    //     return list.map((value: any, index: number) => (
+    //       <div key={index} className="chat-content">
+    //         <span className="date">{value[0]}</span>
+    //         <em className="date-line" />
+    //         {value[1].map((chat: IChat) => (
+    //           <ChatItem
+    //             key={chat.id + chat.createdAt.toString()}
+    //             className="chat-item"
+    //           >
+    //             <UserSquareIcon email={chat.User.email} />
+    //             <TextWrap>
+    //               <div className="chat-user">
+    //                 <strong>{chat.User.nickname}</strong>
+    //                 <em>{format(chat.createdAt, 'aa HH:MM', { locale: ko })}</em>
+    //               </div>
+    //               {handleContent(chat.content)}
+    //             </TextWrap>
+    //           </ChatItem>
+    //         ))}
+    //       </div>
+    //     ));
+    //   case Role.DM:
+    //     return list.map((value: any, index: number) => (
+    //       <div key={index} className="chat-content">
+    //         <span className="date">{value[0]}</span>
+    //         <em className="date-line" />
+    //         {value[1].map((chat: IDM) => (
+    //           <ChatItem
+    //             key={chat.id + chat.createdAt.toString()}
+    //             className="chat-item"
+    //           >
+    //             <UserSquareIcon email={chat.Sender.email} />
+    //             <TextWrap>
+    //               <div className="chat-user">
+    //                 <strong>{chat.Sender.nickname}</strong>
+    //                 <em>{format(chat.createdAt, 'aa HH:MM', { locale: ko })}</em>
+    //               </div>
+    //               {handleContent(chat.content)}
+    //             </TextWrap>
+    //           </ChatItem>
+    //         ))}
+    //       </div>
+    //     ));
+
+    //   default:
+    // }
+  };
+
   return (
     <Scrollbar
       autoHide={true}
@@ -55,83 +164,6 @@ const ContentListWrap = ({
       <div>{ChatContents(role, ChatList)}</div>
     </Scrollbar>
   );
-};
-
-const ChatContents = (role: Role, list: any) => {
-  const handleContent = (content: string) => {
-    const imgRegex = /\<img\s[^>]*>/gi;
-    const stringWithoutImg = content.replaceAll(imgRegex, '');
-    const imgTags = content.match(imgRegex) as string[];
-    const imgSrces = imgTags?.map((item) => {
-      const newImgSrc = item.match(/https[^"]*/gi);
-      return (newImgSrc && newImgSrc[0]) || '';
-    });
-    return (
-      <>
-        <div
-          className="chat-text"
-          dangerouslySetInnerHTML={{
-            __html: DOMPurify.sanitize(stringWithoutImg),
-          }}
-        />
-        {Array.isArray(imgTags) && imgTags.length > 0 && (
-          <div className="chat-imgs">
-            <div className="grid-cotainer">
-              <PhotoViewer imgSrces={imgSrces} />
-            </div>
-          </div>
-        )}
-      </>
-    );
-  };
-  switch (role) {
-    case Role.CHAT:
-      return list.map((value: any, index: number) => (
-        <div key={index} className="chat-content">
-          <span className="date">{value[0]}</span>
-          <em className="date-line" />
-          {value[1].map((chat: IChat) => (
-            <ChatItem
-              key={chat.id + chat.createdAt.toString()}
-              className="chat-item"
-            >
-              <UserSquareIcon email={chat.User.email} />
-              <TextWrap>
-                <div className="chat-user">
-                  <strong>{chat.User.nickname}</strong>
-                  <em>{format(chat.createdAt, 'aa HH:MM', { locale: ko })}</em>
-                </div>
-                {handleContent(chat.content)}
-              </TextWrap>
-            </ChatItem>
-          ))}
-        </div>
-      ));
-    case Role.DM:
-      return list.map((value: any, index: number) => (
-        <div key={index} className="chat-content">
-          <span className="date">{value[0]}</span>
-          <em className="date-line" />
-          {value[1].map((chat: IDM) => (
-            <ChatItem
-              key={chat.id + chat.createdAt.toString()}
-              className="chat-item"
-            >
-              <UserSquareIcon email={chat.Sender.email} />
-              <TextWrap>
-                <div className="chat-user">
-                  <strong>{chat.Sender.nickname}</strong>
-                  <em>{format(chat.createdAt, 'aa HH:MM', { locale: ko })}</em>
-                </div>
-                {handleContent(chat.content)}
-              </TextWrap>
-            </ChatItem>
-          ))}
-        </div>
-      ));
-
-    default:
-  }
 };
 
 export default ContentListWrap;

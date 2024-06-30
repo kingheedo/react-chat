@@ -113,6 +113,7 @@ const Trigger = ({ idx, children }: ITriggerProps & PropsWithChildren) => {
     <li
       className="trigger-btn"
       key={idx}
+      //동적 속성추가
       {...(as === 'hover' && { onMouseEnter: () => handlePopupIdx(idx) })}
       {...(as === 'hover' && { onMouseLeave: () => handlePopupIdx(-1) })}
       {...(as === 'click' && {

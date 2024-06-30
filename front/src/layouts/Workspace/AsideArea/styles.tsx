@@ -101,7 +101,6 @@ export const ChCreateBtn = styled(Item)`
   > span {
     width: 18px;
     height: 18px;
-    font-size: 16px;
     line-height: 17px;
     background: #774d79;
     border-radius: 4px;

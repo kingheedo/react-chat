@@ -6,6 +6,7 @@ import useCreateChannel from '@hooks/useMutate/useCreateChannel';
 import useGetChannels from '@hooks/useSWR/useGetChannels';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { ModalWrap } from './styles';
 
 interface IChannelCreateModalProps {
   isOpen: boolean;
@@ -16,7 +17,11 @@ const ChannelCreateModal = ({
   isOpen,
   handleClose,
 }: IChannelCreateModalProps) => {
-  const { value: channelName, onChangeInput: onChangeChannelName } = useInput({
+  const {
+    value: channelName,
+    setValue: setChannelName,
+    onChangeInput: onChangeChannelName,
+  } = useInput({
     initValue: '',
   });
 
@@ -31,6 +36,10 @@ const ChannelCreateModal = ({
       return;
     }
 
+    if (!channelName) {
+      return alert('채널명을 입력해주세요.');
+    }
+
     try {
       await createChannel({
         workspaceNameParam: currentWorkSpace.name,
@@ -39,6 +48,8 @@ const ChannelCreateModal = ({
         },
       });
       mutateGetChannel();
+      setChannelName('');
+      handleClose();
     } catch (err) {
       console.log('createChannelError', err);
     }
@@ -50,22 +61,28 @@ const ChannelCreateModal = ({
   }, [params]);
 
   return (
-    <CenterModal isOpen={isOpen} handleClose={handleClose}>
-      <CenterModal.CloseBtn />
-      <CenterModal.Head>채널 생성</CenterModal.Head>
-      <CenterModal.Body>
-        <Form enabled={!!channelName} onSubmit={onSubmitCreaetChannel}>
-          <Form.Label htmlFor="name" text="이름" />
-          <Form.Input
-            id="name"
-            name="name"
-            value={channelName}
-            onChange={onChangeChannelName}
-          />
-          <button type="submit">생성</button>
-        </Form>
-      </CenterModal.Body>
-    </CenterModal>
+    <ModalWrap>
+      <CenterModal isOpen={isOpen} handleClose={handleClose}>
+        <CenterModal.CloseBtn />
+        <CenterModal.Head>채널 생성</CenterModal.Head>
+        <CenterModal.Body>
+          <Form enabled={!!channelName} onSubmit={onSubmitCreaetChannel}>
+            <Form.Label htmlFor="name" text="이름" />
+            <Form.Input
+              id="name"
+              name="name"
+              value={channelName}
+              onChange={onChangeChannelName}
+            />
+            <CenterModal.Footer>
+              <CenterModal.FooterBtn type="submit" active={!!channelName}>
+                생성
+              </CenterModal.FooterBtn>
+            </CenterModal.Footer>
+          </Form>
+        </CenterModal.Body>
+      </CenterModal>
+    </ModalWrap>
   );
 };
 

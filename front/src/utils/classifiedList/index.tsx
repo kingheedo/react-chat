@@ -1,19 +1,19 @@
 import { IChat, IDM } from '@typings/db';
 import { format } from 'date-fns';
 
-type ClassifiedList = (IDM | IChat)[];
-
-const classifiedList = (list: ClassifiedList) => {
-  const obj = new Map();
+const classifiedList = (list: (IDM | IChat)[]): [string, (IDM | IChat)[]][] => {
+  const obj = new Map<string, (IDM | IChat)[]>();
 
   list.forEach((chat) => {
     let date = '';
-    if (!chat.createdAt) {
-      return [];
-    }
+    // if (!chat.createdAt) {
+    //   return [];
+    // }
     date = format(chat.createdAt, 'yyyy-MM-dd');
-    obj.set(date, obj.get(date) ? [...obj.get(date), chat] : [chat]);
+    const chatsOnDate = obj.get(date) ?? [];
+    obj.set(date, [...chatsOnDate, chat]);
   });
+  console.log('obj', obj);
 
   return Array.from(obj);
 };

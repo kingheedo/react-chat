@@ -23,9 +23,10 @@ COPY nginx/nginx.conf /etc/nginx/nginx.conf
 
 # Copy the script to renew certificates
 COPY renew_certificates.sh /usr/local/bin/renew_certificates.sh
+# 갱신 스크립트에 권한부여 이후에 스크립트를 직접 실행가능 or cron job에서 실행
 RUN chmod +x /usr/local/bin/renew_certificates.sh
 
-# Expose port 80 and 443
+# Expose port 443
 EXPOSE 443
 
 

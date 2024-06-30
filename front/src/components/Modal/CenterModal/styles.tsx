@@ -10,8 +10,8 @@ export const CenterModalHead = styled.div`
   display: flex;
   width: 100%;
   align-items: center;
-  min-height: 70px;
-  padding: 0 28px 20px;
+  padding: 0 28px 0 0;
+  margin-bottom: 20px;
   font-size: 22px;
   font-weight: 900;
   line-height: 1.36365;

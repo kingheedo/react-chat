@@ -66,6 +66,29 @@ const Footer = ({ children }: PropsWithChildren) => {
   return <CenterModalFooter className="footer">{children}</CenterModalFooter>;
 };
 
+interface IFooterBtnProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  active: boolean;
+  onClick?: () => void;
+}
+
+const FooterBtn = ({
+  type,
+  active,
+  onClick,
+  children,
+}: IFooterBtnProps & PropsWithChildren) => {
+  return (
+    <button
+      type={type}
+      onClick={onClick}
+      className={active ? 'primary-btn active' : 'primary-btn'}
+    >
+      {children}
+    </button>
+  );
+};
+
 const CloseBtn = () => {
   const { handleClose } = useCenterModal();
   return (
@@ -89,6 +112,7 @@ const CloseBtn = () => {
 CenterModal.Head = Head;
 CenterModal.Body = Body;
 CenterModal.Footer = Footer;
+CenterModal.FooterBtn = FooterBtn;
 CenterModal.CloseBtn = CloseBtn;
 
 const useCenterModal = () => useContext(CenterModalContext);

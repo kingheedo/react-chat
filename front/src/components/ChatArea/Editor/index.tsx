@@ -1,12 +1,16 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import { EditorWrap } from '../styles';
-import ReactQuill, { UnprivilegedEditor, Quill } from 'react-quill';
+import ReactQuill from 'react-quill/lib/index.js';
+import type { UnprivilegedEditor } from 'react-quill';
+import type Delta from 'quill-delta';
 import SendIcon from '@components/Icon/SendIcon';
 import useInput from '@hooks/useInput';
-import DeltaStatic from 'quill';
-import Sources from 'quill';
 import { useParams } from 'react-router-dom';
 import useUploadImages from '@hooks/useMutate/useUploadImages';
+import 'react-quill/dist/quill.snow.css';
+
+type DeltaStatic = Delta;
+type Sources = 'api' | 'user' | 'silent';
 const formats = [
   'bold',
   'italic',

@@ -1,5 +1,5 @@
 import { ITokenStore } from '@store/TokenStore';
-import axios, { AxiosError, AxiosRequestConfig } from 'axios';
+import axios, { AxiosError, AxiosRequestConfig, isAxiosError } from 'axios';
 
 export interface IToken
   extends Pick<ITokenStore, 'accessToken' | 'refreshToken'> {}
@@ -8,7 +8,10 @@ const prodUrl = 'http://localhost:3095';
 const devUrl = 'http://localhost:3095';
 
 const authInstance = axios.create({
-  baseURL: process.env.NODE_ENV === prodUrl ? '' : devUrl,
+  baseURL:
+    process.env.NODE_ENV === 'production'
+      ? process.env.SERVER_PROD_URL
+      : process.env.SERVER_DEV_URL,
   withCredentials: true,
 });
 
@@ -99,13 +102,12 @@ authInstance.interceptors.response.use(
               },
             })
           );
-          // const { data } =
-          //   isAxiosError(error) && error.response && error.response.data;
+          const { data } =
+            isAxiosError(error) && error.response && error.response.data;
 
-          // if (data === '다시 로그인 해주세요') {
-
-          // location.href = '/login';
-          // }
+          if (data === '다시 로그인 해주세요') {
+            location.href = '/login';
+          }
         } finally {
           isRefreshing = false;
         }
