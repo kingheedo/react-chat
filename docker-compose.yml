@@ -38,7 +38,7 @@ services:
     container_name: reactchat-front
     image: kingheedo/reactchat-front:latest
     ports:
-      - '3090:443'
+      - '443:3090'
     volumes:
       - /etc/letsencrypt:/etc/letsencrypt  # SSL 인증서 공유
       - /var/lib/letsencrypt:/var/lib/letsencrypt  # SSL 인증서 저장소 공유
