@@ -15,7 +15,6 @@ const App = () => {
   const navigate = useNavigate();
 
   const swrOption: SWRConfiguration = {
-    // dedupingInterval: 8000,
     errorRetryCount: 0,
     revalidateOnFocus: false,
     onError: (err, key, config) => {
