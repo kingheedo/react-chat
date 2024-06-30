@@ -9,7 +9,7 @@ services:
     ports:
       - '443:443'
     env_file:
-      - .env
+      - ./.env
     volumes:
       - /etc/letsencrypt:/etc/letsencrypt
       - /var/lib/letsencrypt:/var/lib/letsencrypt
