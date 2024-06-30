@@ -35,6 +35,7 @@ services:
 
   front:
     build: ./front
+    container_name: reactchat-front
     image: kingheedo/reactchat-front:latest
     ports:
       - '3090:443'
@@ -43,6 +44,7 @@ services:
       - /var/lib/letsencrypt:/var/lib/letsencrypt  # SSL 인증서 저장소 공유
 
   nginx:
+    container_name: reactchat-nginx
     image: nginx:latest
     ports:
       - '443:443'
