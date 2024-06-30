@@ -27,7 +27,7 @@ COPY renew_certificates.sh /usr/local/bin/renew_certificates.sh
 RUN chmod +x /usr/local/bin/renew_certificates.sh
 
 # Expose port 443
-EXPOSE 3090
+EXPOSE 443
 
 
 CMD ["sh", "-c", "nginx -g 'daemon off;' & /usr/local/bin/renew_certificates.sh"]
