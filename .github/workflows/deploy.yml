@@ -111,7 +111,6 @@ jobs:
 
       - name: Build and push front Docker image
         run: |
-          cd /home/ubuntu/react-chat/front
           docker buildx build --no-cache --push --tag ${{ secrets.DOCKER_USERNAME }}/reactchat-front:latest ./front
 
       - name: Pull Docker images
