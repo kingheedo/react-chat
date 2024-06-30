@@ -112,8 +112,8 @@ jobs:
       - name: Build and push front Docker image
         run: |
           # docker buildx build --push --tag ${{ secrets.DOCKER_USERNAME }}/reactchat-front:latest ./front
-          docker-compose -f ./docker-compose.yml build front
-          docker-compose -f ./docker-compose.yml push front
+          docker-compose build front
+          docker-compose push front
 
       - name: Pull Docker images
         uses: appleboy/ssh-action@v0.1.7
