@@ -6,8 +6,6 @@ export interface IToken
 
 const prodUrl = 'https://api.reactchat.online';
 const devUrl = 'http://localhost:3095';
-console.log('1', process.env.NODE_ENV);
-console.log('2', process.env.SERVER_DEV_URL);
 
 const authInstance = axios.create({
   baseURL: process.env.NODE_ENV === 'production' ? prodUrl : devUrl,
