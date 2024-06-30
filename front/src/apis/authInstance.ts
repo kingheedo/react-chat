@@ -6,6 +6,8 @@ export interface IToken
 
 const prodUrl = 'http://localhost:3095';
 const devUrl = 'http://localhost:3095';
+console.log('1', process.env.NODE_ENV);
+console.log('2', process.env.SERVER_DEV_URL);
 
 const authInstance = axios.create({
   baseURL:
