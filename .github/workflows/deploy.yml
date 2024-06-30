@@ -176,7 +176,7 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             cd /home/ubuntu/react-chat
-            sudo systemctl stop nginx
+            sudo docker-compose down nginx
             sudo docker-compose down front
             sudo docker-compose up -d front
             sudo docker-compose up -d nginx
