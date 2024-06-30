@@ -10,7 +10,7 @@ COPY . .
 RUN npm run build
 
 # Stage 2: Serve React App with Nginx and Certbot
-FROM nginx:alpine
+FROM nginx:latest
 
 # # Install certbot and other necessary packages
 # RUN apk add --no-cache certbot certbot-nginx bash
