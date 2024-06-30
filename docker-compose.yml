@@ -40,6 +40,7 @@ services:
     ports:
       - '3090:3090'
     volumes:
+      - ./nginx/nginx.conf:/usr/share/nginx/html
       - /etc/letsencrypt:/etc/letsencrypt  # SSL 인증서 공유
       - /var/lib/letsencrypt:/var/lib/letsencrypt  # SSL 인증서 저장소 공유
 
