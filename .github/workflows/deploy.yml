@@ -175,7 +175,7 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             cd /home/ubuntu/react-chat
-            sudo docker-compose down reactchat-front
+            sudo docker-compose down
             sudo docker-compose up -d front
 
       #- name: Set up cron job for certificate renewal
