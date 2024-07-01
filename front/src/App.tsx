@@ -12,7 +12,6 @@ const SignUpComponent = withAuth(lazy(() => import('@pages/SignUp')));
 const WorkSpaceComponent = withAuth(Workspace);
 const ChannelComponent = withAuth(Channel);
 const App = () => {
-  const navigate = useNavigate();
 
   const swrOption: SWRConfiguration = {
     errorRetryCount: 0,
