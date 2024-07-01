@@ -28,42 +28,42 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Create temporary project directory on EC2
-        uses: appleboy/ssh-action@v0.1.7
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER }}
-          key: ${{ secrets.EC2_SSH_KEY }}
-          script: |
-            sudo mkdir -p /home/ubuntu/react-chat-temp
-            sudo chown ${{ secrets.EC2_USER }}:${{ secrets.EC2_USER }} /home/ubuntu/react-chat-temp
+      # - name: Create temporary project directory on EC2
+      #   uses: appleboy/ssh-action@v0.1.7
+      #   with:
+      #     host: ${{ secrets.FRONT_EC2_HOST }}
+      #     username: ${{ secrets.EC2_USER }}
+      #     key: ${{ secrets.EC2_SSH_KEY }}
+      #     script: |
+      #       sudo mkdir -p /home/ubuntu/react-chat-temp
+      #       sudo chown ${{ secrets.EC2_USER }}:${{ secrets.EC2_USER }} /home/ubuntu/react-chat-temp
       
-      - name: Add SSH key
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
+      # - name: Add SSH key
+      #   run: |
+      #     mkdir -p ~/.ssh
+      #     echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
+      #     chmod 600 ~/.ssh/id_rsa
+      #     ssh-keyscan ${{ secrets.FRONT_EC2_HOST }} >> ~/.ssh/known_hosts
 
-      - name: Copy files via SCP to temporary directory
-        run: |
-          scp -r -i ~/.ssh/id_rsa * ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:/home/ubuntu/react-chat-temp
+      # - name: Copy files via SCP to temporary directory
+      #   run: |
+      #     scp -r -i ~/.ssh/id_rsa * ${{ secrets.EC2_USER }}@${{ secrets.FRONT_EC2_HOST }}:/home/ubuntu/react-chat-temp
 
-      - name: Move files to project directory and set permissions
-        uses: appleboy/ssh-action@v0.1.7
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER }}
-          key: ${{ secrets.EC2_SSH_KEY }}
-          script: |
-            sudo mkdir -p /home/ubuntu/react-chat
-            sudo cp -r /home/ubuntu/react-chat-temp/* /home/ubuntu/react-chat/
-            sudo rm -rf /home/ubuntu/react-chat-temp
+      # - name: Move files to project directory and set permissions
+      #   uses: appleboy/ssh-action@v0.1.7
+      #   with:
+      #     host: ${{ secrets.FRONT_EC2_HOST }}
+      #     username: ${{ secrets.EC2_USER }}
+      #     key: ${{ secrets.EC2_SSH_KEY }}
+      #     script: |
+      #       sudo mkdir -p /home/ubuntu/react-chat
+      #       sudo cp -r /home/ubuntu/react-chat-temp/* /home/ubuntu/react-chat/
+      #       sudo rm -rf /home/ubuntu/react-chat-temp
 
       # - name: Install Docker on EC2
       #   uses: appleboy/ssh-action@v0.1.7
       #   with:
-      #     host: ${{ secrets.EC2_HOST }}
+      #     host: ${{ secrets.FRONT_EC2_HOST }}
       #     username: ${{ secrets.EC2_USER }}
       #     key: ${{ secrets.EC2_SSH_KEY }}
       #     script: |
@@ -85,7 +85,7 @@ jobs:
       # - name: Install Docker Compose on EC2
       #   uses: appleboy/ssh-action@v0.1.7
       #   with:
-      #     host: ${{ secrets.EC2_HOST }}
+      #     host: ${{ secrets.FRONT_EC2_HOST }}
       #     username: ${{ secrets.EC2_USER }}
       #     key: ${{ secrets.EC2_SSH_KEY }}
       #     script: |
@@ -97,7 +97,7 @@ jobs:
       # - name: Install Nginx and Certbot on EC2
       #   uses: appleboy/ssh-action@v0.1.7
       #   with:
-      #     host: ${{ secrets.EC2_HOST }}
+      #     host: ${{ secrets.FRONT_EC2_HOST }}
       #     username: ${{ secrets.EC2_USER }}
       #     key: ${{ secrets.EC2_SSH_KEY }}
       #     script: |
@@ -107,7 +107,7 @@ jobs:
       - name: Ensure Docker is running
         uses: appleboy/ssh-action@v0.1.7
         with:
-          host: ${{ secrets.EC2_HOST }}
+          host: ${{ secrets.FRONT_EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
@@ -133,7 +133,7 @@ jobs:
       - name: Pull Docker images
         uses: appleboy/ssh-action@v0.1.7
         with:
-          host: ${{ secrets.EC2_HOST }}
+          host: ${{ secrets.FRONT_EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
@@ -143,7 +143,7 @@ jobs:
       # - name: Increase Swap Memory
       #   uses: appleboy/ssh-action@v0.1.7
       #   with:
-      #     host: ${{ secrets.EC2_HOST }}
+      #     host: ${{ secrets.FRONT_EC2_HOST }}
       #     username: ${{ secrets.EC2_USER }}
       #     key: ${{ secrets.EC2_SSH_KEY }}
       #     script: |
@@ -156,7 +156,7 @@ jobs:
         # - name: Obtain initial SSL certificates
         #  uses: appleboy/ssh-action@v0.1.7
         #  with:
-        #    host: ${{ secrets.EC2_HOST }}
+        #    host: ${{ secrets.FRONT_EC2_HOST }}
         #    username: ${{ secrets.EC2_USER }}
         #    key: ${{ secrets.EC2_SSH_KEY }}
         #    script: |
@@ -167,7 +167,7 @@ jobs:
       - name: SSH to EC2 and deploy
         uses: appleboy/ssh-action@v0.1.7
         with:
-          host: ${{ secrets.EC2_HOST }}
+          host: ${{ secrets.FRONT_EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
@@ -179,7 +179,7 @@ jobs:
       #- name: Set up cron job for certificate renewal
       #  uses: appleboy/ssh-action@v0.1.7
       #  with:
-      #    host: ${{ secrets.EC2_HOST }}
+      #    host: ${{ secrets.FRONT_EC2_HOST }}
       #    username: ${{ secrets.EC2_USER }}
       #    key: ${{ secrets.EC2_SSH_KEY }}
       #    script: |

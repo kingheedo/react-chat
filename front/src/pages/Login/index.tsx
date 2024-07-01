@@ -59,7 +59,7 @@ const Login = () => {
   return (
     <Section className="signin">
       <header>
-        <Link to="/">React-Chat</Link>
+        <Link to="/">React-Chat Login</Link>
       </header>
       <main>
         <Form enabled={!!(email && password)} onSubmit={onSubmit}>
