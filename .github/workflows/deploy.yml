@@ -6,14 +6,30 @@ on:
       - main
 
 jobs:
-  build-and-deploy:
+  check-changes:
     runs-on: ubuntu-latest
+    outputs:
+      front_changed: ${{ steps.check-changes.outputs.front_changed }}
+      back_changed: ${{ steps.check-changes.outputs.back_changed }}
+    steps:
+      - uses: actions/@checkout@v2
+      - uses: tj-actions/changed-files@v35
+        id: changed-files
+      - id: check-changes
+        run: |
+          echo "front_changed=${{ contains(steps.changed-files.outputs.all_changed_files, 'front/')}}" >> $GITHUB_OUTPUT
+          echo "back_changed=${{ contains(steps.changed-files.outputs.all_changed_files, 'back/')}}" >> $GITHUB_OUTPUT
 
+  deploy-front:
+    needs: check-changes
+    if: needs.check-changes.outputs.front_changed === 'true'
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
       - name: Create temporary project directory on EC2
+                echo "back_changed=${{ contains(steps.changed-files.output
         uses: appleboy/ssh-action@v0.1.7
         with:
           host: ${{ secrets.EC2_HOST }}
