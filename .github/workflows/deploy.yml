@@ -12,13 +12,13 @@ jobs:
       front_changed: ${{ steps.check-changes.outputs.front_changed }}
       back_changed: ${{ steps.check-changes.outputs.back_changed }}
     steps:
-      - uses: actions/@checkout@v2
+      - uses: actions/checkout@v2
       - uses: tj-actions/changed-files@v35
         id: changed-files
       - id: check-changes
         run: |
-          echo "front_changed=${{ contains(steps.changed-files.outputs.all_changed_files, 'front/')}}" >> $GITHUB_OUTPUT
-          echo "back_changed=${{ contains(steps.changed-files.outputs.all_changed_files, 'back/')}}" >> $GITHUB_OUTPUT
+          echo "front_changed=${{ contains(steps.changed-files.outputs.all_changed_files, 'front/') }}" >> $GITHUB_OUTPUT
+          echo "back_changed=${{ contains(steps.changed-files.outputs.all_changed_files, 'back/') }}" >> $GITHUB_OUTPUT
 
   deploy-front:
     needs: check-changes
