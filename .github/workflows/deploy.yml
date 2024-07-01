@@ -22,7 +22,7 @@ jobs:
 
   deploy-front:
     needs: check-changes
-    if: needs.check-changes.outputs.front_changed === 'true'
+    if: needs.check-changes.outputs.front_changed == 'true'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
