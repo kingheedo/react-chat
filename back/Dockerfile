@@ -17,14 +17,13 @@ FROM node:20
 
 WORKDIR /src
 
+# FROM nginx:alpine
+
+# COPY nginx/nginx.conf /etc/nginx/nginx.conf
 COPY --from=build /src /src
 
-FROM nginx:alpine
-
-COPY nginx/nginx.conf /etc/nginx/nginx.conf
-
 # 포트 노출
-EXPOSE 443
+EXPOSE 3095
 
 # 실행 명령 설정
 CMD ["npm", "run", "start:prod"]

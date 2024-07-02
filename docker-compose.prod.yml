@@ -3,7 +3,7 @@ services:
     build: ./back
     container_name: reactchat-back
     ports:
-      - '443:443'
+      - '3095:3095'
     environment:
       DB_HOST: ${DB_HOST}
       DB_USERNAME: ${DB_USERNAME}
