@@ -125,7 +125,13 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build and push front Docker image
-        run: |
+        uses: appleboy/ssh-action@v0.1.7
+        with:
+          host: ${{ secrets.FRONT_EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+        script: |
+          cd /home/ubuntu/react-chat
           docker-compose -f docker-compose.prod.yml --env-file .env.production build front
           docker-compose -f docker-compose.prod.yml --env-file .env.production push front
 
