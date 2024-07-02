@@ -126,9 +126,8 @@ jobs:
 
       - name: Build and push front Docker image
         run: |
-          # docker buildx build --push --tag ${{ secrets.DOCKER_USERNAME }}/reactchat-front:latest ./front
-          docker-compose build front
-          docker-compose push front
+          docker-compose -f docker-compose.prod.yml --env-file .env.production build front
+          docker-compose -f docker-compose.prod.yml --env-file .env.production push front
 
       - name: Pull Docker images
         uses: appleboy/ssh-action@v0.1.7
@@ -138,7 +137,7 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             cd /home/ubuntu/react-chat
-            sudo docker-compose pull front
+            sudo docker-compose -f docker-compose.prod.yml --env-file .env.production pull front
 
       # - name: Increase Swap Memory
       #   uses: appleboy/ssh-action@v0.1.7
@@ -161,7 +160,7 @@ jobs:
         #    key: ${{ secrets.EC2_SSH_KEY }}
         #    script: |
         #      cd /home/ubuntu/react-chat
-        #      sudo docker-compose down
+        #      sudo docker-compose -f docker-compose.prod.yml --env-file .env.production down
         #      sudo certbot --nginx -d reactchat.online -d www.reactchat.online -d api.reactchat.online --non-interactive --agree-tos --email dhkdgmleh@gmail.com
 
       - name: SSH to EC2 and deploy
@@ -172,8 +171,8 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             cd /home/ubuntu/react-chat
-            sudo docker-compose down front
-            sudo docker-compose up -d front
+            sudo docker-compose -f docker-compose.prod.yml --env-file .env.production down front
+            sudo docker-compose -f docker-compose.prod.yml --env-file .env.production up -d front
 
       #- name: Set up cron job for certificate renewal
       #  uses: appleboy/ssh-action@v0.1.7
@@ -183,3 +182,60 @@ jobs:
       #    key: ${{ secrets.EC2_SSH_KEY }}
       #    script: |
       #      echo "0 0 * * * /usr/bin/certbot renew --quiet && sudo systemctl reload nginx" | sudo tee -a /etc/crontab
+  deploy-back:
+    needs: check-changes
+    if: needs.check-changes.outputs.back_changed == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Ensure Docker is running
+        uses: appleboy/ssh-action@v0.1.7
+        with:
+          host: ${{ secrets.BACK_EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            sudo systemctl start docker
+            sudo systemctl enable docker
+            sudo systemctl status docker
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and push back Docker image
+        run: |
+          docker-compose -f docker-compose.prod.yml --env-file .env.production build back
+          docker-compose -f docker-compose.prod.yml --env-file .env.production push back
+
+      - name: Pull Docker images
+        uses: appleboy/ssh-action@v0.1.7
+        with:
+          host: ${{ secrets.BACK_EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            cd /home/ubuntu/react-chat
+            sudo docker-compose -f docker-compose.prod.yml --env-file .env.production pull back
+
+      - name: SSH to EC2 and deploy
+        uses: appleboy/ssh-action@v0.1.7
+        with:
+          host: ${{ secrets.BACK_EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            cd /home/ubuntu/react-chat
+            sudo docker-compose -f docker-compose.prod.yml --env-file .env.production stop back
+            sudo docker-compose -f docker-compose.prod.yml --env-file .env.production rm -f back
+            sudo docker-compose -f docker-compose.prod.yml --env-file .env.production up -d --no-deps back  
+
+
+
