@@ -11,8 +11,12 @@ RUN npm install
 COPY . .
 RUN npm run build
 
+FROM nginx:alpine
+
+COPY nginx/nginx.conf /etc/nginx/nginx.conf
+
 # 포트 노출
-EXPOSE 3095
+EXPOSE 443
 
 # 실행 명령 설정
 CMD ["npm", "run", "start:prod"]
