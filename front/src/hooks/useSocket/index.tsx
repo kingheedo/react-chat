@@ -21,9 +21,16 @@ const useSocket = (workspace: string): ReturnType => {
   }
 
   if (!sockets[workspace]) {
-    sockets[workspace] = io(`http://localhost:3095/ws-${workspace}`, {
-      transports: ['websocket'],
-    });
+    sockets[workspace] = io(
+      `${
+        process.env.NODE_ENV === 'production'
+          ? 'https://api.reactchat.online'
+          : 'http://localhost:3095'
+      }/ws-${workspace}`,
+      {
+        transports: ['websocket'],
+      }
+    );
     sockets[workspace].connect();
   }
 
