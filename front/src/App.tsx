@@ -19,6 +19,7 @@ const App = () => {
       console.log('err', err);
     },
   };
+
   return (
     <SWRConfig value={swrOption}>
       <Suspense fallback={<div>로딩중 ...</div>}>

@@ -132,8 +132,8 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             cd /home/ubuntu/react-chat
-            docker-compose -f docker-compose.prod.yml --env-file .env.production build front
-            docker-compose -f docker-compose.prod.yml --env-file .env.production push front
+            sudo docker-compose -f docker-compose.prod.yml --env-file .env.production build front
+            sudo docker-compose -f docker-compose.prod.yml --env-file .env.production push front
 
       - name: Pull Docker images
         uses: appleboy/ssh-action@v0.1.7
