@@ -64,7 +64,7 @@ authInstance.interceptors.response.use(
               refreshToken: tokens.refreshToken,
             },
             {
-              baseURL: process.env.NODE_ENV === prodUrl ? '' : devUrl,
+              baseURL: process.env.NODE_ENV === 'production' ? prodUrl : devUrl,
               withCredentials: true,
             }
           );

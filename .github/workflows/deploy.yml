@@ -131,20 +131,20 @@ jobs:
         run: |
           echo "SERVER_DEV_URL=${{ secrets.SERVER_DEV_URL }}" >> .env.production
           echo "SERVER_PROD_URL=${{ secrets.SERVER_PROD_URL }}" >> .env.production
-          echo "CLIENT_DEV_URL=${{ secrets.CLIENT_DEV_URL }}" >> .env.production
-          echo "CLIENT_PROD_URL=${{ secrets.CLIENT_PROD_URL }}" >> .env.production
-          echo "COOKIE_SECRET=${{ secrets.COOKIE_SECRET }}" >> .env.production
-          echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env.production
-          echo "PORT=${{ secrets.PORT }}" >> .env.production
-          echo "DB_HOST=${{ secrets.DB_HOST }}" >> .env.production
-          echo "DB_PORT=${{ secrets.DB_PORT }}" >> .env.production
-          echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" >> .env.production
-          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env.production
-          echo "DB_DATABASE=${{ secrets.DB_DATABASE }}" >> .env.production
-          echo "AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}" >> .env.production
-          echo "AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> .env.production
-          echo "AWS_REGION=${{ secrets.AWS_REGION }}" >> .env.production
-          echo "AWS_BUCKET_NAME=${{ secrets.AWS_BUCKET_NAME }}" >> .env.production
+          # echo "CLIENT_DEV_URL=${{ secrets.CLIENT_DEV_URL }}" >> .env.production
+          # echo "CLIENT_PROD_URL=${{ secrets.CLIENT_PROD_URL }}" >> .env.production
+          # echo "COOKIE_SECRET=${{ secrets.COOKIE_SECRET }}" >> .env.production
+          # echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env.production
+          # echo "PORT=${{ secrets.PORT }}" >> .env.production
+          # echo "DB_HOST=${{ secrets.DB_HOST }}" >> .env.production
+          # echo "DB_PORT=${{ secrets.DB_PORT }}" >> .env.production
+          # echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" >> .env.production
+          # echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env.production
+          # echo "DB_DATABASE=${{ secrets.DB_DATABASE }}" >> .env.production
+          # echo "AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}" >> .env.production
+          # echo "AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> .env.production
+          # echo "AWS_REGION=${{ secrets.AWS_REGION }}" >> .env.production
+          # echo "AWS_BUCKET_NAME=${{ secrets.AWS_BUCKET_NAME }}" >> .env.production
           
 
       - name: Build and push front Docker image
