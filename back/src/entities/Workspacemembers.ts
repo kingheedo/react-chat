@@ -9,7 +9,7 @@ import {
 import { Users } from './Users';
 import { Workspaces } from './Workspaces';
 
-@Entity('workspacemembers', { schema: 'reactchat' })
+@Entity('workspacemembers', { schema: process.env.DB_DATABASE })
 export class Workspacemembers {
   @PrimaryGeneratedColumn({ type: 'int', name: 'id' })
   id: number;

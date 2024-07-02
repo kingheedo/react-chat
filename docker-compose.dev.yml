@@ -1,9 +1,29 @@
-# docker-compose.yml
-
 services:
+  back:
+    build: ./back
+    container_name: reactchat-back
+    ports:
+      - '3095:3095'
+    environment:
+      DB_HOST: ${DB_HOST}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_DATABASE: ${DB_DATABASE}
+      CLIENT_DEV_URL: ${CLIENT_DEV_URL}
+      CLIENT_PROD_URL: ${CLIENT_PROD_URL}
+      COOKIE_SECRET: ${COOKIE_SECRET}
+      JWT_SECRET: ${JWT_SECRET}
+      DB_PORT: ${DB_PORT}
+      PORT: ${PORT}
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+      AWS_REGION: ${AWS_REGION}
+      AWS_BUCKET_NAME: ${AWS_BUCKET_NAME}
+    depends_on:
+      - mysql
+
   mysql:
-    image: mysql:8.4.0
-    container_name: reactchat-mysql
+    image: mysql:8.0
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
@@ -12,28 +32,6 @@ services:
       - '3307:3306'
     volumes:
       - mysql_data:/var/lib/mysql
-
-  back:
-    build: ./back
-    container_name: reactchat-back
-    ports:
-      - '443:443'
-    environment:
-      DB_HOST: ${DB_HOST}
-      DB_USERNAME: ${DB_USERNAME}
-      DB_PASSWORD: ${DB_PASSWORD}
-      DB_DATABASE: ${DB_DATABASE}
-      CLIENT_DEV_PORT: ${CLIENT_DEV_PORT}
-      CLIENT_PROD_PORT: ${CLIENT_PROD_PORT}
-      COOKIE_SECRET: ${COOKIE_SECRET}
-      JWT_SECERT: ${JWT_SECERT}
-      PORT: ${PORT}
-      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
-      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
-      AWS_REGION: ${AWS_REGION}
-      AWS_BUCKET_NAME: ${AWS_BUCKET_NAME}
-    depends_on:
-      - mysql
 
   front:
     build: ./front

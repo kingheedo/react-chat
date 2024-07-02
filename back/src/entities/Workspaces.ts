@@ -12,7 +12,7 @@ import { Channels } from './Channels';
 import { Dms } from './Dms';
 import { Workspacemembers } from './Workspacemembers';
 
-@Entity('workspaces', { schema: 'reactchat' })
+@Entity('workspaces', { schema: process.env.DB_DATABASE })
 export class Workspaces {
   @ApiProperty({
     example: 1,

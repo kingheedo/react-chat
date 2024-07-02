@@ -7,7 +7,7 @@ import { Channelmembers } from './Channelmembers';
 import { Workspacemembers } from './Workspacemembers';
 import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
 
-@Entity('users', { schema: 'reactchat' })
+@Entity('users', { schema: process.env.DB_DATABASE })
 export class Users {
   @ApiProperty({
     example: 1,

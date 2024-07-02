@@ -9,7 +9,7 @@ import {
 import { Channels } from './Channels';
 import { Users } from './Users';
 
-@Entity('channelchats', { schema: 'reactchat' })
+@Entity('channelchats', { schema: process.env.DB_DATABASE })
 export class Channelchats {
   @ApiProperty({
     example: 1,

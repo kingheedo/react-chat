@@ -5,11 +5,19 @@ WORKDIR /src
 
 # package.json과 package-lock.json 복사하여 의존성 설치
 COPY package.json package-lock.json ./
-RUN npm install
+RUN npm ci
 
 # 소스 코드 복사 후 빌드 실행
 COPY . .
 RUN npm run build
+
+
+# 최종 이미지
+FROM node:20
+
+WORKDIR /src
+
+COPY --from=build /src /src
 
 FROM nginx:alpine
 
